@@ -1,0 +1,9 @@
+
+channel: "mmchannel"
+name: "Admin"
+orgname: "mmOrg"
+chaincodeid : "ledger"
+dbhost: "127.0.0.1"
+dbuser: "root"
+dbpwd: "123456"
+dbname: "mmchannel"

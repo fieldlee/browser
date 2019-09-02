@@ -1,0 +1,245 @@
+package sqlapi
+
+import (
+	"browser/handle"
+	"browser/model"
+	"browser/utils"
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
+)
+// Get INfo
+func GetInfo (c *gin.Context) {
+	fabsdk := handle.InitSdk()
+	defer fabsdk.Close()
+	response,err := fabsdk.GetInfo()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"info":response,
+	})
+}
+// Get Block by height
+func GetBlocksByHeight(c *gin.Context) {
+	fabsdk := handle.InitSdk()
+	defer fabsdk.Close()
+	strStart := c.Param("start")
+	strLimit := c.Param("limit")
+	start , err := strconv.Atoi(strStart)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	limit , err := strconv.Atoi(strLimit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+
+	listBlocks := make([]model.Block,0)
+
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+
+	listBh,err := sqlClient.QueryBlocksByRange(start,limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+
+	for i := 0;i < len(listBh);i++{
+
+		txs , err := sqlClient.QueryTxsByBlockHash(listBh[i].DataHash)
+		if err != nil {
+			fmt.Errorf("Query Txs By block hash err :%s",err.Error())
+			continue
+		}
+
+
+		tmpBck := model.Block{
+			Number:listBh[i].Number,
+			PreviousHash:listBh[i].PreviousHash,
+			DataHash:listBh[i].DataHash,
+			TxList:txs,
+		}
+
+		listBlocks = append(listBlocks,tmpBck)
+	}
+
+	c.JSON(http.StatusOK,gin.H{
+		"blocks":listBlocks,
+	})
+	return
+}
+// Get Block BY height
+func GetBlockByHeight(c *gin.Context) {
+	fabsdk := handle.InitSdk()
+	defer fabsdk.Close()
+	strHeight := c.Param("height")
+	height , err := strconv.Atoi(strHeight)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+
+	bh,err := sqlClient.QueryBlockByHeight(height)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+
+	txs , err := sqlClient.QueryTxsByBlockHash(bh.DataHash)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),})
+		return
+	}
+	tmpBck := model.Block{
+		Number:bh.Number,
+		PreviousHash:bh.PreviousHash,
+		DataHash:bh.DataHash,
+		TxList:txs,
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"block":tmpBck,
+	})
+	return
+}
+// Get BLock by hash
+func GetBlockByHash(c *gin.Context) {
+	fabsdk := handle.InitSdk()
+	defer fabsdk.Close()
+	hash := c.Param("hash")
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+	bh,err := sqlClient.QueryBlockByHash(hash)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	txs , err := sqlClient.QueryTxsByBlockHash(bh.DataHash)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),})
+		return
+	}
+	tmpBck := model.Block{
+		Number:bh.Number,
+		PreviousHash:bh.PreviousHash,
+		DataHash:bh.DataHash,
+		TxList:txs,
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"block":tmpBck,
+	})
+	return
+}
+// Get Tx by Txid
+func GetTxByID(c *gin.Context) {
+	fabsdk := handle.InitSdk()
+	defer fabsdk.Close()
+	hash := c.Param("id")
+
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+	txinfo,err := sqlClient.QueryTxs(hash)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"tx":txinfo,
+	})
+	return
+}
+// Get BLock by hash
+func GetBlockByTxHash(c *gin.Context) {
+	fabsdk := handle.InitSdk()
+	defer fabsdk.Close()
+	hash := c.Param("hash")
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+	blockhash,err := sqlClient.QueryBlockHashByTxId(hash)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+
+	bh,err := sqlClient.QueryBlockByHash(blockhash)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	txs , err := sqlClient.QueryTxsByBlockHash(bh.DataHash)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),})
+		return
+	}
+	tmpBck := model.Block{
+		Number:bh.Number,
+		PreviousHash:bh.PreviousHash,
+		DataHash:bh.DataHash,
+		TxList:txs,
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"block":tmpBck,
+	})
+	return
+}
