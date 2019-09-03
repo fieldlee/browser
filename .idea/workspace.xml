@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="487a7edd-2a5f-4c57-b6f9-062a7c8021b6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/utils/redis_cluster.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/redis_cluster_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/redis.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,46 +12,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/redis.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="768">
-              <caret line="110" column="1" selection-start-line="39" selection-end-line="110" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/redis_cluster.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="36" column="23" selection-start-line="36" selection-start-column="23" selection-end-line="36" selection-end-column="23" />
-              <folding>
-                <element signature="e#15#61#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/utils/redis_cluster_test.go">
+        <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="46" column="20" lean-forward="true" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
+            <state relative-caret-position="552">
+              <caret line="103" column="24" selection-start-line="103" selection-start-column="24" selection-end-line="103" selection-end-column="24" />
               <folding>
-                <element signature="e#15#43#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/redis_test.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="912">
-              <caret line="41" column="6" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
-              <folding>
-                <element signature="e#15#43#0" expanded="true" />
+                <element signature="n#!!block;n#Logger#0" />
               </folding>
             </state>
           </provider>
@@ -117,12 +81,12 @@
         <option value="$PROJECT_DIR$/sqlapi/block.go" />
         <option value="$PROJECT_DIR$/api/account.go" />
         <option value="$PROJECT_DIR$/utils/couch.go" />
-        <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/utils/sql_test.go" />
         <option value="$PROJECT_DIR$/utils/redis_test.go" />
         <option value="$PROJECT_DIR$/utils/redis.go" />
         <option value="$PROJECT_DIR$/utils/redis_cluster.go" />
         <option value="$PROJECT_DIR$/utils/redis_cluster_test.go" />
+        <option value="$PROJECT_DIR$/main.go" />
       </list>
     </option>
   </component>
@@ -283,12 +247,6 @@
     </recent_temporary>
   </component>
   <component name="TestHistory">
-    <history-entry file="BenchmarkRedisClusterClient_GetKey_in_browser_utils - 2019.09.03 at 00h 31m 45s.xml">
-      <configuration name="BenchmarkRedisClusterClient_GetKey in browser/utils" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="BenchmarkRedisClusterClient_DelKey_in_browser_utils - 2019.09.03 at 00h 32m 08s.xml">
-      <configuration name="BenchmarkRedisClusterClient_DelKey in browser/utils" configurationId="GoTestRunConfiguration" />
-    </history-entry>
     <history-entry file="BenchmarkRedisClusterClient_SetKey_in_browser_utils - 2019.09.03 at 00h 32m 16s.xml">
       <configuration name="BenchmarkRedisClusterClient_SetKey in browser/utils" configurationId="GoTestRunConfiguration" />
     </history-entry>
@@ -313,6 +271,12 @@
     <history-entry file="BenchmarkRedisClusterClient_PopList_in_browser_utils - 2019.09.03 at 00h 40m 57s.xml">
       <configuration name="BenchmarkRedisClusterClient_PopList in browser/utils" configurationId="GoTestRunConfiguration" />
     </history-entry>
+    <history-entry file="BenchmarkRedisClusterClient_PushList_in_browser_utils - 2019.09.03 at 00h 41m 29s.xml">
+      <configuration name="BenchmarkRedisClusterClient_PushList in browser/utils" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="BenchmarkRedisClusterClient_PopList_in_browser_utils - 2019.09.03 at 00h 41m 55s.xml">
+      <configuration name="BenchmarkRedisClusterClient_PopList in browser/utils" configurationId="GoTestRunConfiguration" />
+    </history-entry>
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -327,7 +291,7 @@
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19955282" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19955282" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -341,7 +305,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.5230596" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="11" visible="true" weight="0.42182228" />
+      <window_info anchor="bottom" id="Run" order="11" weight="0.42182228" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -712,16 +676,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/couch.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="60" column="5" selection-start-line="60" selection-start-column="5" selection-end-line="60" selection-end-column="5" />
-          <folding>
-            <element signature="e#15#101#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/api/account.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
@@ -744,27 +698,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="108" column="7" selection-start-line="108" selection-start-column="7" selection-end-line="108" selection-end-column="7" />
-          <folding>
-            <element signature="n#!!block;n#Logger#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/sql_test.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="528">
           <caret line="26" selection-start-line="26" selection-end-line="46" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/redis.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="768">
-          <caret line="110" column="1" selection-start-line="39" selection-end-line="110" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -790,10 +727,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/redis_cluster_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="46" column="20" lean-forward="true" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
+        <state relative-caret-position="1560">
+          <caret line="65" column="9" lean-forward="true" selection-start-line="65" selection-start-column="9" selection-end-line="65" selection-end-column="9" />
           <folding>
             <element signature="e#15#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/redis.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="5" column="30" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/couch.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1176">
+          <caret line="49" column="17" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="17" />
+          <folding>
+            <element signature="e#15#101#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="103" column="24" selection-start-line="103" selection-start-column="24" selection-end-line="103" selection-end-column="24" />
+          <folding>
+            <element signature="n#!!block;n#Logger#0" />
           </folding>
         </state>
       </provider>
