@@ -37,6 +37,7 @@ func InitRedis()*RedisClient{
 	return redisClient
 }
 
+
 func (r *RedisClient)SetKey(key string,value string)error{
 	cmd := r.Client.Set(key,value,0)
 	if cmd.Err() != nil {
