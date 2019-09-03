@@ -7,27 +7,28 @@ import (
 )
 
 func TestInsertBlock(t *testing.T) {
-	init:=InitSql()
-	if init {
-
+	client,err := InitSql()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 		block := model.BlockHeader{
 			Number:uint64(1),
 			PreviousHash:"11111",
 			DataHash:"2222",
 		}
-		err := InsertBlock(block)
+		err = client.InsertBlock(block)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-	}else{
-		fmt.Println("not init")
-	}
-	CloseSql()
+
+	client.CloseSql()
 }
 
 func TestInsertToken(t *testing.T) {
-	init:=InitSql()
-	if init {
+	client,err := InitSql()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 		token := model.Token{
 			Amount:0,
@@ -37,12 +38,10 @@ func TestInsertToken(t *testing.T) {
 			Status:true,
 			Type:"token",
 		}
-		err := InsertToken(token)
+		err = client.InsertToken(token)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-	}else{
-		fmt.Println("not init")
-	}
-	CloseSql()
+
+	client.CloseSql()
 }

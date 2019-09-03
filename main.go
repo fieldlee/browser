@@ -3,6 +3,8 @@ package main
 import (
 	"browser/api"
 	"browser/sqlapi"
+	"browser/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -102,6 +104,13 @@ func setupRouter() *gin.Engine {
 func main() {
 	//启动监听区块
 	go api.ListenBlock()
+	redisClient := utils.InitRedis()
+	redisClient.SetKey("k001","redis value")
+	v,err := redisClient.GetKey("k001")
+	if err != nil{
+		fmt.Println(err.Error())
+	}
+	fmt.Println(v)
 	//启动service
 	r := setupRouter()
 	r.Run(":8080")
