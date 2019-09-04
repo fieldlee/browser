@@ -94,7 +94,11 @@ func setupRouter() *gin.Engine {
 		sql.GET("/token",sqlapi.Token)
 		sql.POST("/token",sqlapi.TokenHistory)
 		sql.POST("/account",api.GetAccount)
+
 	}
+
+	r.POST("/invoke",api.Invoke)
+	r.POST("/query",api.Query)
 
 	return r
 }

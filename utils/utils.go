@@ -11,6 +11,7 @@ import (
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"github.com/spf13/viper"
 	"log"
+	"reflect"
 	"time"
 )
 
@@ -180,4 +181,15 @@ func UpdateBlockAndTx(block cb.Block)error{
 		}
 	}
 	return nil
+}
+
+
+func TypeSwitch(arg interface{}){
+	vType := reflect.TypeOf(arg)
+	switch vType.Name() {
+	case "string":
+		fmt.Printf("String:%s\n",vType.String())
+		fmt.Printf("name:%s\n",vType.Name())
+
+	}
 }

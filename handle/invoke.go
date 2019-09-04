@@ -8,69 +8,35 @@ import (
 	"github.com/hyperledger/fabric-sdk-go/pkg/common/errors/retry"
 )
 
-func (f FabSdk)GetTokens()([]model.Token,error) {
+func (f FabSdk)Invoke(funcName string,args []string)(model.Payload,string,error){
 	client, err := channel.New(f.channeProvider)
 	if err != nil {
 		fmt.Printf("Failed to create new channel client: %s", err.Error())
-		return nil , err
+		return  model.Payload{},"",err
 	}
-	response,err := client.Query(channel.Request{
+	argList := make([][]byte,0)
+
+	for _,v := range args{
+		//vType := reflect.TypeOf(v)
+		//switch vType.Name() {
+		//case "string":
+		//	value := reflect.ValueOf(v)
+		//	argList = append(argList,value.Bytes())
+		//}
+		argList = append(argList,[]byte(v))
+	}
+	response,err := client.Execute(channel.Request{
 		ChaincodeID:chaincodeid,
-		Fcn:"token_list",
-		Args:[][]byte{},
+		Fcn:funcName,
+		Args:argList,
 	},channel.WithRetry(retry.DefaultChannelOpts))
 	if err != nil {
-		return nil , err
+		return model.Payload{},"",err
 	}
-
 	payload := model.Payload{}
 	err = json.Unmarshal(response.Payload,&payload)
 	if err != nil {
-		return nil , err
+		return  model.Payload{},"",err
 	}
-	records := make([]model.RecordToken,0)
-	err = json.Unmarshal([]byte(payload.Message),&records)
-	if err != nil {
-		return nil , err
-	}
-
-	listTOken := make([]model.Token,0)
-	for _,v := range records{
-		listTOken = append(listTOken, v.Record)
-	}
-	return listTOken ,nil
-}
-
-
-func (f FabSdk)GetTokenHistory(tokenName string)([]model.HistoryToken,error) {
-	client, err := channel.New(f.channeProvider)
-	if err != nil {
-		fmt.Printf("Failed to create new channel client: %s", err.Error())
-		return nil,err
-	}
-	fmt.Println(tokenName)
-	args := make([][]byte,0)
-	args = append(args,[]byte(tokenName))
-	response,err := client.Query(channel.Request{
-		ChaincodeID:chaincodeid,
-		Fcn:"token_history",
-		Args:args,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	payload := model.Payload{}
-	err = json.Unmarshal(response.Payload,&payload)
-	if err != nil {
-		return nil , err
-	}
-
-	records := make([]model.HistoryToken,0)
-	err = json.Unmarshal([]byte(payload.Message),&records)
-	if err != nil {
-		return nil , err
-	}
-
-	return  records,nil
+	return payload,string(response.TransactionID),nil
 }

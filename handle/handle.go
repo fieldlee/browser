@@ -80,9 +80,7 @@ func (f FabSdk)GetBlocks(height uint64)(model.Block,error){
 	}
 
 	listTx := make([]model.TransactionDetail,0)
-
 	for _,data := range blockinfo.Data.Data{
-
 		txDetail,err := utils.GetTransactionInfoFromData(data,true)
 		if err != nil {
 			fmt.Println(err.Error())
@@ -123,7 +121,6 @@ func (f FabSdk)GetBlocksByHash(hash string)(model.Block,error){
 		}
 		listTx = append(listTx,*txDetail)
 	}
-
 	block := model.Block{}
 	block.DataHash = hex.EncodeToString(blockinfo.Header.GetDataHash())
 	block.PreviousHash = hex.EncodeToString(blockinfo.Header.PreviousHash)
@@ -137,7 +134,6 @@ func (f FabSdk)GetBlocksByTxId(hash string)(model.Block,error){
 		fmt.Errorf(err.Error())
 		return model.Block{},err
 	}
-
 	blockinfo,err := client.QueryBlockByTxID(fab.TransactionID(hash))
 	if err != nil {
 		fmt.Errorf("QueryBlockByTxID err :%s",err.Error())
@@ -152,7 +148,6 @@ func (f FabSdk)GetBlocksByTxId(hash string)(model.Block,error){
 		}
 		listTx = append(listTx,*txDetail)
 	}
-
 	block := model.Block{}
 	block.DataHash = hex.EncodeToString(blockinfo.Header.GetDataHash())
 	block.PreviousHash = hex.EncodeToString(blockinfo.Header.PreviousHash)
@@ -167,13 +162,11 @@ func (f FabSdk)GetTransactionByTxId(txid string)(model.TransactionDetail,error){
 		fmt.Errorf(err.Error())
 		return result,err
 	}
-
 	transaction,err := client.QueryTransaction(fab.TransactionID(txid))
 	if err != nil {
 		fmt.Errorf(err.Error())
 		return result,err
 	}
-
 	args,err := utils.GetTransaction(transaction.TransactionEnvelope)
 	if err != nil {
 		fmt.Errorf(err.Error())

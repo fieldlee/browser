@@ -56,6 +56,7 @@ func(c *CouchClient)GetAccount(name string)(model.Account,error){
 	if err != nil {
 		return model.Account{}, err
 	}
+
 	if accoutsResp.Docs != nil && len(accoutsResp.Docs)>0 {
 		return accoutsResp.Docs[0],nil
 	}

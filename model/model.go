@@ -54,3 +54,15 @@ type Account struct {
 type CouchAccountList struct {
 	Docs []Account `json:"docs"`
 }
+
+type QueryHolder struct {
+	Holder string `json:"holder"`
+	Token string `json:"token"`
+}
+type LedgerAction struct {
+	Type   string `json:"type"`
+	Token  string `json:"token"`
+	Holder string `json:"holder"`
+	Amount float64 `json:"amount"`
+	Desc   string `json:"desc"`
+}
