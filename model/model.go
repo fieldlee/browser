@@ -28,14 +28,19 @@ type Token struct {
 	Status bool `json:"status"`
 	Type   string `json:"type"`
 }
+
 type RecordToken struct {
 	Key  string `json:"Key"`
 	Record Token `json:"Record"`
 }
+
+
 type HistoryToken struct {
 	TxId string `json:"TxId"`
 	Value Token `json:"Value"`
 }
+
+
 type Payload struct {
 	Status  int `json:"status"`
 	Message string `json:"message"`
@@ -59,6 +64,7 @@ type QueryHolder struct {
 	Holder string `json:"holder"`
 	Token string `json:"token"`
 }
+
 type LedgerAction struct {
 	Type   string `json:"type"`
 	Token  string `json:"token"`

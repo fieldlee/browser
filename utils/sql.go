@@ -192,7 +192,7 @@ func (s *SqlCliet)QueryBlocksByRange(curHeight int,limit int)([]model.BlockHeade
 	listBLOCK := make([]model.BlockHeader,0)
 	for rows.Next(){
 		blockheader := model.BlockHeader{}
-		rows.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number)
+		err = rows.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number)
 		if err != nil {
 			fmt.Printf(err.Error())
 			continue
