@@ -2,6 +2,7 @@ package sqlapi
 
 import (
 	"browser/handle"
+	"browser/model"
 	"browser/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -26,8 +27,26 @@ func Token(c *gin.Context) {
 		return
 	}
 
+	var tList = []model.TokenInfo{}
+
+	for _, t := range tokens {
+		ti := model.TokenInfo{}
+		ti.Name = t.Name
+		ti.Status = t.Status
+		ti.Amount = t.Amount
+		ti.Desc = t.Desc
+		ti.Issuer = t.Issuer
+		txs,err := sqlClient.QueryTxsByToken(ti.Name)
+		if err != nil {
+			ti.TxsNumber = 0
+		}else {
+			ti.TxsNumber = len(txs)
+		}
+		tList = append(tList,ti)
+	}
+
 	c.JSON(http.StatusOK,gin.H{
-		"tokens":tokens,
+		"tokens":tList,
 	})
 	return
 }

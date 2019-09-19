@@ -243,3 +243,57 @@ func GetBlockByTxHash(c *gin.Context) {
 	})
 	return
 }
+
+// Get Tx by account
+func GetTxsByAccount(c *gin.Context){
+	fabsdk := handle.InitSdk()
+	defer fabsdk.Close()
+	account := c.Param("account")
+
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+	txinfo,err := sqlClient.QueryTxsByAccount(account)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"txs":txinfo,
+	})
+	return
+}
+
+// Get Txs by token
+func GetTxsByToken(c *gin.Context){
+	fabsdk := handle.InitSdk()
+	defer fabsdk.Close()
+	token := c.Param("token")
+
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+	txinfo,err := sqlClient.QueryTxsByToken(token)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"txs":txinfo,
+	})
+	return
+}

@@ -35,12 +35,16 @@ func InitSql()(*SqlCliet,error) {
 }
 
 func (s *SqlCliet)InsertBlock(block model.BlockHeader)error{
-	stmt, err := s.DB.Prepare("INSERT INTO blocks(height,prehash,hash) VALUES (?,?,?) ")
+	stmt, err := s.DB.Prepare("INSERT INTO blocks(height,createtime,prehash,hash) VALUES (?,?,?,?) ")
 	defer stmt.Close()
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(block.Number,block.PreviousHash,block.DataHash)
+	t, err := time.Parse("2006-01-02 15:04:05",block.CreateTime)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(block.Number,t,block.PreviousHash,block.DataHash)
 	if err != nil {
 		return err
 	}
@@ -130,7 +134,7 @@ func (s *SqlCliet)QueryBlockHeight()(int,error){
 }
 
 func (s *SqlCliet)QueryBlockByHeight(height int)(model.BlockHeader,error){
-	stmt,err := s.DB.Prepare("select prehash,hash,height from blocks where height = ?")
+	stmt,err := s.DB.Prepare("select prehash,hash,height,createtime from blocks where height = ?")
 	defer stmt.Close()
 	if err != nil {
 		return model.BlockHeader{} , err
@@ -141,11 +145,13 @@ func (s *SqlCliet)QueryBlockByHeight(height int)(model.BlockHeader,error){
 	}
 	if row != nil {
 		blockheader := model.BlockHeader{}
-		err = row.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number)
+		var time = time.Now()
+		err = row.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number,&time)
 		if err != nil {
 			fmt.Printf(err.Error())
 			return model.BlockHeader{} , err
 		}
+		blockheader.CreateTime = time.Format("2006-01-02 15:04:05")
 		return blockheader,nil
 	}else{
 		return model.BlockHeader{} , errors.New("the transaction not exist")
@@ -153,7 +159,7 @@ func (s *SqlCliet)QueryBlockByHeight(height int)(model.BlockHeader,error){
 }
 
 func (s *SqlCliet)QueryBlockByHash(hash string)(model.BlockHeader,error){
-	stmt,err := s.DB.Prepare("select prehash,hash,height from blocks where hash = ?")
+	stmt,err := s.DB.Prepare("select prehash,hash,height,createtime from blocks where hash = ?")
 	defer stmt.Close()
 	if err != nil {
 		return model.BlockHeader{} , err
@@ -164,11 +170,13 @@ func (s *SqlCliet)QueryBlockByHash(hash string)(model.BlockHeader,error){
 	}
 	if row != nil {
 		blockheader := model.BlockHeader{}
-		err = row.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number)
+		var time = time.Now()
+		err = row.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number,&time)
 		if err != nil {
 			fmt.Printf(err.Error())
 			return model.BlockHeader{} , err
 		}
+		blockheader.CreateTime = time.Format("2006-01-02 15:04:05")
 		return blockheader,nil
 	}else{
 		return model.BlockHeader{} , errors.New("the transaction not exist")
@@ -180,7 +188,7 @@ func (s *SqlCliet)QueryBlocksByRange(curHeight int,limit int)([]model.BlockHeade
 	if start <= 0{
 		start = 0
 	}
-	stmt,err := s.DB.Prepare("select prehash,hash,height from blocks where height >= ? and height <= ?")
+	stmt,err := s.DB.Prepare("select prehash,hash,height,createtime from blocks where height >= ? and height <= ?")
 	defer stmt.Close()
 	if err != nil {
 		return nil , err
@@ -192,11 +200,14 @@ func (s *SqlCliet)QueryBlocksByRange(curHeight int,limit int)([]model.BlockHeade
 	listBLOCK := make([]model.BlockHeader,0)
 	for rows.Next(){
 		blockheader := model.BlockHeader{}
-		err = rows.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number)
+		var time = time.Now()
+		err = rows.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number,&time)
 		if err != nil {
 			fmt.Printf(err.Error())
 			continue
 		}
+		blockheader.CreateTime = time.Format("2006-01-02 15:04:05")
+
 		listBLOCK = append(listBLOCK,blockheader)
 	}
 	return listBLOCK,nil
@@ -286,6 +297,80 @@ func (s *SqlCliet)QueryTxs(hash string)(model.TransactionDetail,error){
 	}
 }
 
+func (s *SqlCliet)QueryTxsByAccount(account string)([]model.TransactionDetail,error){
+	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime  from transactions where method = 'transfer' and args like ?")
+	defer stmt.Close()
+	if err != nil {
+		return nil , err
+	}
+	laccount := "%"+account+"%"
+	rows,err := stmt.Query(laccount)
+	if err != nil {
+		return nil , err
+	}
+	listTX := make([]model.TransactionDetail,0)
+	for rows.Next(){
+		tx := model.TransactionDetail{}
+		var time = time.Now()
+		var method = ""
+		var args = ""
+		var signed = ""
+
+		err = rows.Scan(&tx.TransactionId, &method, &args,&signed,&time)
+		if err != nil {
+			fmt.Printf(err.Error())
+			continue
+		}
+
+		tx.CreateTime = time.Format("2006-01-02 15:04:05")
+		var argslist = make([]string,0)
+		argslist = append(argslist,method)
+		argslist = append(argslist,args)
+		argslist = append(argslist,signed)
+		tx.Args = argslist
+		listTX = append(listTX,tx)
+	}
+	return listTX,nil
+}
+
+
+func (s *SqlCliet)QueryTxsByToken(token string)([]model.TransactionDetail,error){
+	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime  from transactions where method = 'transfer' and args like ?")
+	defer stmt.Close()
+	if err != nil {
+		return nil , err
+	}
+	laccount := "%"+token+"%"
+	rows,err := stmt.Query(laccount)
+	if err != nil {
+		return nil , err
+	}
+	listTX := make([]model.TransactionDetail,0)
+	for rows.Next(){
+		tx := model.TransactionDetail{}
+		var time = time.Now()
+		var method = ""
+		var args = ""
+		var signed = ""
+
+		err = rows.Scan(&tx.TransactionId, &method, &args,&signed,&time)
+		if err != nil {
+			fmt.Printf(err.Error())
+			continue
+		}
+
+		tx.CreateTime = time.Format("2006-01-02 15:04:05")
+		var argslist = make([]string,0)
+		argslist = append(argslist,method)
+		argslist = append(argslist,args)
+		argslist = append(argslist,signed)
+		tx.Args = argslist
+		listTX = append(listTX,tx)
+	}
+	return listTX,nil
+}
+
+
 func (s *SqlCliet)InsertToken(token model.Token)error{
 	stmt, err := s.DB.Prepare("INSERT INTO tokens (name_,amount,issuer,status,type_,action_,desc_) VALUES (?,?,?,?,?,?,?)")
 	defer stmt.Close()
@@ -342,6 +427,6 @@ func (s *SqlCliet)CloseSql(){
 	s.DB.Close()
 }
 
-///CREATE TABLE blocks( height INT NOT NULL ,  prehash VARCHAR(100) NOT NULL, hash VARCHAR(100) NOT NULL, PRIMARY KEY ( height ) )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+///CREATE TABLE blocks( height INT NOT NULL ,createtime DATETIME,  prehash VARCHAR(100) NOT NULL, hash VARCHAR(100) NOT NULL, PRIMARY KEY ( height ) )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ///CREATE TABLE transactions( txhash VARCHAR(100) NOT NULL ,  blockhash VARCHAR(100) NOT NULL, method VARCHAR(50) DEFAULT NULL, args VARCHAR(150) DEFAULT NULL, signed VARCHAR(200) DEFAULT NULL, createtime DATETIME, PRIMARY KEY ( txhash ) )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ///CREATE TABLE tokens( name_ VARCHAR(30) NOT NULL,amount float, issuer VARCHAR(30) DEFAULT NULL,action VARCHAR(30) DEFAULT NULL, desc VARCHAR(50) DEFAULT NULL,status bool, type_ VARCHAR(20) DEFAULT NULL, PRIMARY KEY ( name_) )ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -33,14 +33,14 @@ func SyncBlockTx(c *gin.Context) {
 	}
 	defer sqlClient.CloseSql()
 
-	sqlHeight,err := sqlClient.QueryBlockHeight()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError,gin.H{
-			"err":err.Error(),
-		})
-		return
-	}
-	for i:= sqlHeight+1; uint64(i) <= curHeight ;i++  {
+	//sqlHeight,err := sqlClient.QueryBlockHeight()
+	//if err != nil {
+	//	c.JSON(http.StatusInternalServerError,gin.H{
+	//		"err":err.Error(),
+	//	})
+	//	return
+	//}
+	for i:= 0; uint64(i) <= curHeight ;i++  {
 		if blockinfo ,err := fabsdk.GetBlocks(uint64(i));err != nil {
 			fmt.Errorf(err.Error())
 			continue
@@ -49,6 +49,11 @@ func SyncBlockTx(c *gin.Context) {
 			curBlock.Number = blockinfo.Number
 			curBlock.PreviousHash = blockinfo.PreviousHash
 			curBlock.DataHash = blockinfo.DataHash
+			// update createtime
+			if len(blockinfo.TxList)>0{
+				curBlock.CreateTime = blockinfo.TxList[0].CreateTime
+			}
+
 			err = sqlClient.InsertBlock(curBlock)
 			if err != nil {
 				fmt.Errorf(err.Error())

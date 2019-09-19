@@ -1,7 +1,11 @@
 package utils
 
-import "testing"
+import (
+
+	"testing"
+)
 
 func TestTypeSwitch(t *testing.T) {
-	TypeSwitch("aaaa")
+
 }
+

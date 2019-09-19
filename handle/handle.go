@@ -92,6 +92,11 @@ func (f FabSdk)GetBlocks(height uint64)(model.Block,error){
 	block.DataHash = hex.EncodeToString(blockinfo.Header.GetDataHash())
 	block.PreviousHash = hex.EncodeToString(blockinfo.Header.GetPreviousHash())
 	block.Number = blockinfo.Header.Number
+	// add create time
+	if len(listTx)>0{
+		block.CreateTime = listTx[0].CreateTime
+	}
+
 	block.TxList = listTx
 	return block,nil
 }
@@ -125,6 +130,10 @@ func (f FabSdk)GetBlocksByHash(hash string)(model.Block,error){
 	block.DataHash = hex.EncodeToString(blockinfo.Header.GetDataHash())
 	block.PreviousHash = hex.EncodeToString(blockinfo.Header.PreviousHash)
 	block.Number = blockinfo.Header.Number
+	// add create time
+	if len(listTx)>0{
+		block.CreateTime = listTx[0].CreateTime
+	}
 	block.TxList = listTx
 	return block,nil
 }
@@ -152,6 +161,10 @@ func (f FabSdk)GetBlocksByTxId(hash string)(model.Block,error){
 	block.DataHash = hex.EncodeToString(blockinfo.Header.GetDataHash())
 	block.PreviousHash = hex.EncodeToString(blockinfo.Header.PreviousHash)
 	block.Number = blockinfo.Header.Number
+	// add create time
+	if len(listTx)>0{
+		block.CreateTime = listTx[0].CreateTime
+	}
 	block.TxList = listTx
 	return block,nil
 }

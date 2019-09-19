@@ -70,6 +70,17 @@ func (r *RedisClient)PopList(key string)(string,error){
 	return cmd.Result()
 }
 
+func (r *RedisClient)HSets(hkey string,fields map[string]interface{} )(string,error){
+	cmd := r.Client.HMSet(hkey,fields)
+	return cmd.Result()
+}
+
+func (r *RedisClient)HGets(hkey string,fields ...string )([]interface{},error){
+	cmd := r.Client.HMGet(hkey,fields...)
+	return cmd.Result()
+}
+
+
 func (r *RedisClient)HSet(hkey string,mkey string,v interface{})(bool,error){
 	resultcmd := r.Client.HSet(hkey,mkey,v)
 	if resultcmd.Err() != nil {
@@ -103,9 +114,13 @@ func (r *RedisClient)DelKey(keys ...string)error{
 	return nil
 }
 
+
+
+
 func (r *RedisClient)Close(){
 	err := r.Client.Close()
 	if err != nil{
 		fmt.Errorf(err.Error())
 	}
 }
+

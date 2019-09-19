@@ -4,12 +4,14 @@ type BlockHeader struct {
 	Number               uint64
 	PreviousHash         string
 	DataHash             string
+	CreateTime    		 string
 }
 
 type Block struct {
 	Number               uint64
 	PreviousHash         string
 	DataHash             string
+	CreateTime           string
 	TxList 	[]TransactionDetail
 }
 
@@ -27,6 +29,15 @@ type Token struct {
 	Name   string `json:"name"`
 	Status bool `json:"status"`
 	Type   string `json:"type"`
+}
+
+type TokenInfo struct {
+	Amount float64 `json:"amount"`
+	Desc   string `json:"desc"`
+	Issuer string `json:"issuer"`
+	Name   string `json:"name"`
+	Status bool `json:"status"`
+	TxsNumber int `json:"txs_number"`
 }
 
 type RecordToken struct {

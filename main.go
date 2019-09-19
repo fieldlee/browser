@@ -40,16 +40,14 @@ func setupRouter() *gin.Engine {
 	r.NoRoute(api.NoRouterHandle)
 	r.Use(Logger())
 	r.GET("/",func(c *gin.Context){
-		c.Redirect(http.StatusMovedPermanently,"/block")
+		c.Redirect(http.StatusMovedPermanently,"/s/info")
 	})
-	hlc := r.Group("/hlc")
+	hlc := r.Group("/c")
 	{
 		block := hlc.Group("/block")
 		{
 			// 默认获得块列表
 			block.GET("/list/:start/:limit", api.GetBlocksByHeight)
-			// 默认获得制定高度块列表
-			//block.GET("/blocks/:height", api.GetBlocksByHeight)
 			// 默认获得制定高度的块
 			block.GET("/height/:height", api.GetBlockByHeight)
 			// 默认获得指定hash的块
@@ -70,9 +68,11 @@ func setupRouter() *gin.Engine {
 		hlc.GET("/account", api.GetAccounts)
 		// 同步block transaction
 		hlc.GET("/sync", api.SyncBlockTx)
+		// get account
+		hlc.GET("/query/:account", api.QueryHold)
 	}
 
-	sql := r.Group("/sql")
+	sql := r.Group("/s")
 	{
 		sqlblock:=sql.Group("/block")
 		{
@@ -92,13 +92,16 @@ func setupRouter() *gin.Engine {
 
 		sql.GET("/info",sqlapi.GetInfo)
 		sql.GET("/token",sqlapi.Token)
+		sql.GET("/token/:token",sqlapi.GetTxsByToken)
 		sql.POST("/token",sqlapi.TokenHistory)
 		sql.POST("/account",api.GetAccount)
+		sql.GET("/txs/:account",sqlapi.GetTxsByAccount)
 
 	}
 
 	r.POST("/invoke",api.Invoke)
 	r.POST("/query",api.Query)
+
 
 	return r
 }

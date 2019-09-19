@@ -17,12 +17,6 @@ func (f FabSdk)Invoke(funcName string,args []string)(model.Payload,string,error)
 	argList := make([][]byte,0)
 
 	for _,v := range args{
-		//vType := reflect.TypeOf(v)
-		//switch vType.Name() {
-		//case "string":
-		//	value := reflect.ValueOf(v)
-		//	argList = append(argList,value.Bytes())
-		//}
 		argList = append(argList,[]byte(v))
 	}
 	response,err := client.Execute(channel.Request{
