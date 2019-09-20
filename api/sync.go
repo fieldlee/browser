@@ -33,14 +33,14 @@ func SyncBlockTx(c *gin.Context) {
 	}
 	defer sqlClient.CloseSql()
 
-	//sqlHeight,err := sqlClient.QueryBlockHeight()
-	//if err != nil {
-	//	c.JSON(http.StatusInternalServerError,gin.H{
-	//		"err":err.Error(),
-	//	})
-	//	return
-	//}
-	for i:= 0; uint64(i) <= curHeight ;i++  {
+	sqlHeight,err := sqlClient.QueryBlockHeight()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	for i:= sqlHeight+1; uint64(i) <= curHeight ;i++  {
 		if blockinfo ,err := fabsdk.GetBlocks(uint64(i));err != nil {
 			fmt.Errorf(err.Error())
 			continue
@@ -71,7 +71,7 @@ func SyncBlockTx(c *gin.Context) {
 					}
 				}
 			}
-			time.Sleep(1*time.Second)
+			time.Sleep(time.Duration(500)*time.Microsecond)
 			///update
 			updateBlock,err := sqlClient.QueryBlockByHeight(i-1)
 			if err != nil {

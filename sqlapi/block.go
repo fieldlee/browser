@@ -68,7 +68,7 @@ func GetBlocksByHeight(c *gin.Context) {
 
 		txs , err := sqlClient.QueryTxsByBlockHash(listBh[i].DataHash)
 		if err != nil {
-			fmt.Errorf("Query Txs By block hash err :%s",err.Error())
+			fmt.Printf("Query Txs By block hash err :%s",err.Error())
 			continue
 		}
 
