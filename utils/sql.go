@@ -188,7 +188,7 @@ func (s *SqlCliet)QueryBlocksByRange(curHeight int,limit int)([]model.BlockHeade
 	if start <= 0{
 		start = 0
 	}
-	stmt,err := s.DB.Prepare("select prehash,hash,height,createtime from blocks where height >= ? and height <= ?")
+	stmt,err := s.DB.Prepare("select prehash,hash,height,createtime from blocks where height >= ? and height <= ? order by height desc ")
 	defer stmt.Close()
 	if err != nil {
 		return nil , err
@@ -378,6 +378,19 @@ func (s *SqlCliet)InsertToken(token model.Token)error{
 		return err
 	}
 	_, err = stmt.Exec(token.Name,float64(token.Amount),token.Issuer,token.Status,token.Type,token.Action,token.Desc)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SqlCliet)RemoveToken()error{
+	stmt, err := s.DB.Prepare("delete from tokens")
+	defer stmt.Close()
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec()
 	if err != nil {
 		return err
 	}
