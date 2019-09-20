@@ -66,8 +66,7 @@ func setupRouter() *gin.Engine {
 		hlc.GET("/token", api.SyncToken)
 		// 获得account
 		hlc.GET("/account", api.GetAccounts)
-		// 同步block transaction
-		hlc.GET("/sync", api.SyncBlockTx)
+
 		// get account
 		hlc.GET("/query/:account", api.QueryHold)
 	}
@@ -89,20 +88,19 @@ func setupRouter() *gin.Engine {
 		{
 			sqltx.GET("/id/:id",sqlapi.GetTxByID)
 		}
-
 		sql.GET("/info",sqlapi.GetInfo)
 		sql.GET("/token",sqlapi.Token)
 		sql.GET("/token/:token",sqlapi.GetTxsByToken)
 		sql.POST("/token",sqlapi.TokenHistory)
 		sql.POST("/account",api.GetAccount)
 		sql.GET("/txs/:account",sqlapi.GetTxsByAccount)
-
 	}
 
 	r.POST("/invoke",api.Invoke)
 	r.POST("/query",api.Query)
-
-
+	// 同步block transaction
+	r.GET("/sync", api.SyncBlockTx)
+	r.GET("/synctoken", api.SyncToken)
 	return r
 }
 

@@ -26,8 +26,8 @@ func InitSdk()FabSdk{
 	viper.AddConfigPath(configFile)
 	sdk, err := fabsdk.New(config.FromFile(configFile))
 	if err != nil {
-		fmt.Println("实例化Fabric SDK失败: %v\n", err)
-		return FabSdk{}
+		fmt.Printf("实例化Fabric SDK失败: %v\n", err)
+		os.Exit(-1)
 	}
 
 	ymlCon:= utils.InitConfig()
