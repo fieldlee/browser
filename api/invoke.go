@@ -101,3 +101,4 @@ func Query(c *gin.Context){
 	})
 	return
 }
+

@@ -397,6 +397,43 @@ func (s *SqlCliet)RemoveToken()error{
 	return nil
 }
 
+func (s *SqlCliet)QueryTokensById(token string)([]model.Token,error){
+	stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens where name_ like ?")
+	defer stmt.Close()
+	if err != nil {
+		return nil , err
+	}
+	tokenlike := "%"+token+"%"
+	rows,err := stmt.Query(tokenlike)
+	if err != nil {
+		return nil , err
+	}
+	tokenList := make([]model.Token,0)
+	for rows.Next(){
+		name := ""
+		amount := float64(0)
+		issuer := ""
+		status := false
+		type_ := ""
+		action := ""
+		desc := ""
+		err = rows.Scan(&name,&amount,&issuer,&status,&type_,&action,&desc)
+		if err != nil {
+			continue
+		}
+		tmpToken := model.Token{
+			Amount:amount,
+			Issuer:issuer,
+			Name:name,
+			Type:type_,
+			Status:status,
+			Action:action,
+			Desc:desc,
+		}
+		tokenList = append(tokenList,tmpToken)
+	}
+	return tokenList,nil
+}
 
 func (s *SqlCliet)QueryTokens()([]model.Token,error){
 	stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens ")

@@ -98,6 +98,7 @@ func setupRouter() *gin.Engine {
 
 	r.POST("/invoke",api.Invoke)
 	r.POST("/query",api.Query)
+	r.POST("/search",sqlapi.Search)
 	// 同步block transaction
 	r.GET("/sync", api.SyncBlockTx)
 	r.GET("/synctoken", api.SyncToken)
