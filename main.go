@@ -102,6 +102,7 @@ func setupRouter() *gin.Engine {
 	// 同步block transaction
 	r.GET("/sync", api.SyncBlockTx)
 	r.GET("/synctoken", api.SyncToken)
+
 	return r
 }
 

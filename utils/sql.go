@@ -476,7 +476,7 @@ func (s *SqlCliet)QueryTokens()([]model.Token,error){
 func (s *SqlCliet)CloseSql(){
 	s.DB.Close()
 }
-
+///CREATE DATABASE IF NOT EXISTS mmchannel DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 ///CREATE TABLE blocks( height INT NOT NULL ,createtime DATETIME,  prehash VARCHAR(100) NOT NULL, hash VARCHAR(100) NOT NULL, PRIMARY KEY ( height ) )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ///CREATE TABLE transactions( txhash VARCHAR(100) NOT NULL ,  blockhash VARCHAR(100) NOT NULL, method VARCHAR(50) DEFAULT NULL, args VARCHAR(150) DEFAULT NULL, signed VARCHAR(200) DEFAULT NULL, createtime DATETIME, PRIMARY KEY ( txhash ) )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-///CREATE TABLE tokens( name_ VARCHAR(30) NOT NULL,amount float, issuer VARCHAR(30) DEFAULT NULL,action VARCHAR(30) DEFAULT NULL, desc VARCHAR(50) DEFAULT NULL,status bool, type_ VARCHAR(20) DEFAULT NULL, PRIMARY KEY ( name_) )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+///CREATE TABLE tokens( name_ VARCHAR(30) NOT NULL,amount float, issuer VARCHAR(30) DEFAULT NULL,action VARCHAR(30) DEFAULT NULL, desc_ VARCHAR(50) DEFAULT NULL,status bool, type_ VARCHAR(20) DEFAULT NULL, PRIMARY KEY ( name_) )ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -2,6 +2,8 @@ package sqlapi
 
 import (
 	"browser/utils"
+	"database/sql"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -33,10 +35,10 @@ func Search(c *gin.Context){
 
 	// block
 	blockHeader,err := sqlClient.QueryBlockByHash(key)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		c.JSON(http.StatusInternalServerError,gin.H{
-			"success":false,
-			"err":err.Error(),
+			"success": false,
+			"err":     fmt.Sprintf("get block by hash err :%s", err.Error()),
 		})
 		return
 	}
@@ -52,18 +54,13 @@ func Search(c *gin.Context){
 
 
 	intkey,err := strconv.Atoi(key)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError,gin.H{
-			"success":false,
-			"err":err.Error(),
-		})
-		return
-	}else{
+	if err == nil {
+
 		block,err := sqlClient.QueryBlockByHeight(intkey)
-		if err != nil {
+		if err != nil && err != sql.ErrNoRows {
 			c.JSON(http.StatusInternalServerError,gin.H{
 				"success":false,
-				"err":err.Error(),
+				"err":fmt.Sprintf("query block by hash err :%s",err.Error()),
 			})
 			return
 		}
@@ -82,10 +79,10 @@ func Search(c *gin.Context){
 
 	// tx
 	txs,err := sqlClient.QueryTxs(key)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		c.JSON(http.StatusInternalServerError,gin.H{
 			"success":false,
-			"err":err.Error(),
+			"err":fmt.Sprintf("query transactions by hash err :%s",err.Error()),
 		})
 		return
 	}
@@ -102,10 +99,10 @@ func Search(c *gin.Context){
 
 	// token
 	tokens,err := sqlClient.QueryTokensById(key)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		c.JSON(http.StatusInternalServerError,gin.H{
 			"success":false,
-			"err":err.Error(),
+			"err":fmt.Sprintf("query token by id err :%s",err.Error()),
 		})
 		return
 	}
@@ -121,7 +118,7 @@ func Search(c *gin.Context){
 
 	// account
 	couchClient,err := utils.InitCouchClient()
-	if err != nil {
+	if err != nil  {
 		c.JSON(http.StatusInternalServerError,gin.H{
 			"success":false,
 			"err":err.Error(),
