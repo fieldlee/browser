@@ -35,6 +35,7 @@ func SyncToken(c *gin.Context) {
 		return
 	}
 	for i := 0;i<len(tokens) ;i++  {
+		fmt.Println(tokens[i])
 		err = sqlClient.InsertToken(tokens[i])
 		if err != nil {
 			fmt.Println(err.Error())
