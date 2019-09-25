@@ -86,6 +86,8 @@ func setupRouter() *gin.Engine {
 		}
 		sqltx := sql.Group("/tx")
 		{
+			sqltx.GET("/info",sqlapi.GetTxHeight)
+			sqltx.GET("/list/:start/:limit",sqlapi.GetTxByID)
 			sqltx.GET("/id/:id",sqlapi.GetTxByID)
 		}
 		sql.GET("/info",sqlapi.GetInfo)

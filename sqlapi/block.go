@@ -297,3 +297,27 @@ func GetTxsByToken(c *gin.Context){
 	})
 	return
 }
+
+// Get Txs heigth
+func GetTxHeight(c *gin.Context){
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+
+	count,err := sqlClient.QueryTxsNum()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"txcount":count,
+	})
+	return
+}

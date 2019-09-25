@@ -370,6 +370,21 @@ func (s *SqlCliet)QueryTxsByToken(token string)([]model.TransactionDetail,error)
 	return listTX,nil
 }
 
+func (s *SqlCliet)QueryTxsNum()(int,error){
+	stmt,err := s.DB.Prepare(" select count(*) as txcount  from transactions")
+	defer stmt.Close()
+	if err != nil {
+		return 0 , err
+	}
+	row := stmt.QueryRow()
+	var count = 0
+	err = row.Scan(&count)
+	if err != nil {
+		return 0 , err
+	}
+	return count,nil
+}
+
 
 func (s *SqlCliet)InsertToken(token model.Token)error{
 	stmt, err := s.DB.Prepare("INSERT INTO tokens (name_,amount,issuer,status,type_,action_,desc_) VALUES (?,?,?,?,?,?,?)")
