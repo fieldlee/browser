@@ -79,14 +79,23 @@ func GetBlocksByHeight(c *gin.Context) {
 			continue
 		}
 
-
-		tmpBck := model.Block{
-			Number:listBh[i].Number,
-			PreviousHash:listBh[i].PreviousHash,
-			DataHash:listBh[i].DataHash,
-			TxList:txs,
+		var tmpBck model.Block
+		if len(txs) > 0{
+			txinfo := txs[0]
+			tmpBck = model.Block{
+				Number:listBh[i].Number,
+				PreviousHash:listBh[i].PreviousHash,
+				CreateTime:txinfo.CreateTime,
+				DataHash:listBh[i].DataHash,
+				TxList:txs,
+			}
+		}else{
+			tmpBck = model.Block{
+				Number:listBh[i].Number,
+				PreviousHash:listBh[i].PreviousHash,
+				DataHash:listBh[i].DataHash,
+			}
 		}
-
 		listBlocks = append(listBlocks,tmpBck)
 	}
 
@@ -135,12 +144,24 @@ func GetBlockByHeight(c *gin.Context) {
 			"err":err.Error(),})
 		return
 	}
-	tmpBck := model.Block{
-		Number:bh.Number,
-		PreviousHash:bh.PreviousHash,
-		DataHash:bh.DataHash,
-		TxList:txs,
+	var tmpBck model.Block
+	if len(txs) > 0{
+		txinfo := txs[0]
+		tmpBck = model.Block{
+			Number:bh.Number,
+			PreviousHash:bh.PreviousHash,
+			CreateTime:txinfo.CreateTime,
+			DataHash:bh.DataHash,
+			TxList:txs,
+		}
+	}else{
+		tmpBck = model.Block{
+			Number:bh.Number,
+			PreviousHash:bh.PreviousHash,
+			DataHash:bh.DataHash,
+		}
 	}
+
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
 		"block":tmpBck,
@@ -176,11 +197,22 @@ func GetBlockByHash(c *gin.Context) {
 			"err":err.Error(),})
 		return
 	}
-	tmpBck := model.Block{
-		Number:bh.Number,
-		PreviousHash:bh.PreviousHash,
-		DataHash:bh.DataHash,
-		TxList:txs,
+	var tmpBck model.Block
+	if len(txs) > 0{
+		txinfo := txs[0]
+		tmpBck = model.Block{
+			Number:bh.Number,
+			PreviousHash:bh.PreviousHash,
+			CreateTime:txinfo.CreateTime,
+			DataHash:bh.DataHash,
+			TxList:txs,
+		}
+	}else{
+		tmpBck = model.Block{
+			Number:bh.Number,
+			PreviousHash:bh.PreviousHash,
+			DataHash:bh.DataHash,
+		}
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
@@ -256,11 +288,22 @@ func GetBlockByTxHash(c *gin.Context) {
 			"err":err.Error(),})
 		return
 	}
-	tmpBck := model.Block{
-		Number:bh.Number,
-		PreviousHash:bh.PreviousHash,
-		DataHash:bh.DataHash,
-		TxList:txs,
+	var tmpBck model.Block
+	if len(txs) > 0{
+		txinfo := txs[0]
+		tmpBck = model.Block{
+			Number:bh.Number,
+			PreviousHash:bh.PreviousHash,
+			CreateTime:txinfo.CreateTime,
+			DataHash:bh.DataHash,
+			TxList:txs,
+		}
+	}else{
+		tmpBck = model.Block{
+			Number:bh.Number,
+			PreviousHash:bh.PreviousHash,
+			DataHash:bh.DataHash,
+		}
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
