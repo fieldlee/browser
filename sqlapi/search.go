@@ -27,6 +27,7 @@ func Search(c *gin.Context){
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":"init error",
 		})
 		return
@@ -145,7 +146,7 @@ func Search(c *gin.Context){
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"type":"null",
+		"type":"false",
 	})
 	return
 }

@@ -14,6 +14,7 @@ func SyncToken(c *gin.Context) {
 	tokens,err := fabsdk.GetTokens()
 	if err != nil{
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -21,6 +22,7 @@ func SyncToken(c *gin.Context) {
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":fmt.Sprintf("init error:%s",err.Error()),
 		})
 		return
@@ -30,6 +32,7 @@ func SyncToken(c *gin.Context) {
 	err = sqlClient.RemoveToken()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err": fmt.Sprintf("remove tokens error : %s",err.Error()) ,
 		})
 		return
@@ -43,6 +46,7 @@ func SyncToken(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"tokens":tokens,
 	})
 	return

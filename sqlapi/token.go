@@ -12,6 +12,7 @@ func Token(c *gin.Context) {
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":"init error",
 		})
 		return
@@ -22,6 +23,7 @@ func Token(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -46,6 +48,7 @@ func Token(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"tokens":tList,
 	})
 	return
@@ -64,6 +67,7 @@ func TokenHistory(c *gin.Context){
 	err := c.BindJSON(&postToken)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -71,12 +75,14 @@ func TokenHistory(c *gin.Context){
 	historylist,err :=fabsdk.GetTokenHistory(postToken.Token)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"history":historylist,
 	})
 	return

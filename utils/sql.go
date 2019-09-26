@@ -385,6 +385,48 @@ func (s *SqlCliet)QueryTxsNum()(int,error){
 	return count,nil
 }
 
+func (s *SqlCliet)QueryTxsByRange(curHeight int,limit int)([]model.TransactionDetail,error){
+	height,err := s.QueryTxsNum()
+	if err != nil {
+		return nil , err
+	}
+
+	offset := height-curHeight
+
+	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime from transactions order by createtime desc limit ? offset ?")
+	defer stmt.Close()
+	if err != nil {
+		return nil , err
+	}
+
+	rows,err := stmt.Query(limit,offset)
+	if err != nil {
+		return nil , err
+	}
+	listTX := make([]model.TransactionDetail,0)
+	for rows.Next(){
+		tx := model.TransactionDetail{}
+		var time = time.Now()
+		var method = ""
+		var args = ""
+		var signed = ""
+
+		err = rows.Scan(&tx.TransactionId, &method, &args,&signed,&time)
+		if err != nil {
+			fmt.Printf(err.Error())
+			continue
+		}
+
+		tx.CreateTime = time.Format("2006-01-02 15:04:05")
+		var argslist = make([]string,0)
+		argslist = append(argslist,method)
+		argslist = append(argslist,args)
+		argslist = append(argslist,signed)
+		tx.Args = argslist
+		listTX = append(listTX,tx)
+	}
+	return listTX,nil
+}
 
 func (s *SqlCliet)InsertToken(token model.Token)error{
 	stmt, err := s.DB.Prepare("INSERT INTO tokens (name_,amount,issuer,status,type_,action_,desc_) VALUES (?,?,?,?,?,?,?)")

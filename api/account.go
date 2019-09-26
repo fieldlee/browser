@@ -11,6 +11,7 @@ func GetAccounts(c *gin.Context) {
 	couchClient,err := utils.InitCouchClient()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -18,11 +19,13 @@ func GetAccounts(c *gin.Context) {
 	accountList,err := couchClient.GetAccounts()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"accounts":accountList,
 	})
 	return
@@ -32,6 +35,7 @@ func GetAccount(c *gin.Context) {
 	couchClient,err := utils.InitCouchClient()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -44,6 +48,7 @@ func GetAccount(c *gin.Context) {
 	err = c.BindJSON(account)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -51,11 +56,13 @@ func GetAccount(c *gin.Context) {
 	accountList,err := couchClient.GetAccount(account.Name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"account":accountList,
 	})
 	return

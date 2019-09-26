@@ -16,11 +16,13 @@ func GetInfo (c *gin.Context) {
 	response,err := fabsdk.GetInfo()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"info":response,
 	})
 }
@@ -33,6 +35,7 @@ func GetBlocksByHeight(c *gin.Context) {
 	start , err := strconv.Atoi(strStart)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -40,6 +43,7 @@ func GetBlocksByHeight(c *gin.Context) {
 	limit , err := strconv.Atoi(strLimit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -50,6 +54,7 @@ func GetBlocksByHeight(c *gin.Context) {
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -59,6 +64,7 @@ func GetBlocksByHeight(c *gin.Context) {
 	listBh,err := sqlClient.QueryBlocksByRange(start,limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -84,6 +90,7 @@ func GetBlocksByHeight(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"blocks":listBlocks,
 	})
 	return
@@ -96,6 +103,7 @@ func GetBlockByHeight(c *gin.Context) {
 	height , err := strconv.Atoi(strHeight)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -103,6 +111,7 @@ func GetBlockByHeight(c *gin.Context) {
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -112,6 +121,7 @@ func GetBlockByHeight(c *gin.Context) {
 	bh,err := sqlClient.QueryBlockByHeight(height)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -120,6 +130,7 @@ func GetBlockByHeight(c *gin.Context) {
 	txs , err := sqlClient.QueryTxsByBlockHash(bh.DataHash)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),})
 		return
 	}
@@ -130,6 +141,7 @@ func GetBlockByHeight(c *gin.Context) {
 		TxList:txs,
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"block":tmpBck,
 	})
 	return
@@ -142,6 +154,7 @@ func GetBlockByHash(c *gin.Context) {
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -150,6 +163,7 @@ func GetBlockByHash(c *gin.Context) {
 	bh,err := sqlClient.QueryBlockByHash(hash)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -157,6 +171,7 @@ func GetBlockByHash(c *gin.Context) {
 	txs , err := sqlClient.QueryTxsByBlockHash(bh.DataHash)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),})
 		return
 	}
@@ -167,6 +182,7 @@ func GetBlockByHash(c *gin.Context) {
 		TxList:txs,
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"block":tmpBck,
 	})
 	return
@@ -180,6 +196,7 @@ func GetTxByID(c *gin.Context) {
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -188,11 +205,13 @@ func GetTxByID(c *gin.Context) {
 	txinfo,err := sqlClient.QueryTxs(hash)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"tx":txinfo,
 	})
 	return
@@ -205,6 +224,7 @@ func GetBlockByTxHash(c *gin.Context) {
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -213,6 +233,7 @@ func GetBlockByTxHash(c *gin.Context) {
 	blockhash,err := sqlClient.QueryBlockHashByTxId(hash)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -222,6 +243,7 @@ func GetBlockByTxHash(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -229,6 +251,7 @@ func GetBlockByTxHash(c *gin.Context) {
 	txs , err := sqlClient.QueryTxsByBlockHash(bh.DataHash)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),})
 		return
 	}
@@ -239,6 +262,7 @@ func GetBlockByTxHash(c *gin.Context) {
 		TxList:txs,
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"block":tmpBck,
 	})
 	return
@@ -253,6 +277,7 @@ func GetTxsByAccount(c *gin.Context){
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -261,11 +286,13 @@ func GetTxsByAccount(c *gin.Context){
 	txinfo,err := sqlClient.QueryTxsByAccount(account)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"txs":txinfo,
 	})
 	return
@@ -280,6 +307,7 @@ func GetTxsByToken(c *gin.Context){
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -288,11 +316,13 @@ func GetTxsByToken(c *gin.Context){
 	txinfo,err := sqlClient.QueryTxsByToken(token)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"txs":txinfo,
 	})
 	return
@@ -303,6 +333,7 @@ func GetTxHeight(c *gin.Context){
 	sqlClient,err := utils.InitSql()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -312,12 +343,59 @@ func GetTxHeight(c *gin.Context){
 	count,err := sqlClient.QueryTxsNum()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"txcount":count,
+	})
+	return
+}
+// Get Txs heigth
+func GetTxsByHeigth(c *gin.Context){
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+
+	strStart := c.Param("start")
+	strLimit := c.Param("limit")
+	start , err := strconv.Atoi(strStart)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	limit , err := strconv.Atoi(strLimit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+
+	txs,err :=sqlClient.QueryTxsByRange(start,limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"success":true,
+		"txs":txs,
 	})
 	return
 }

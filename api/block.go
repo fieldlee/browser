@@ -15,6 +15,7 @@ func GetBlocks (c *gin.Context) {
 	response,err := fabsdk.GetInfo()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -33,6 +34,7 @@ func GetBlocks (c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"blocks":listBlocks,
 	})
 }
@@ -45,6 +47,7 @@ func GetBlocksByHeight(c *gin.Context) {
 	start , err := strconv.Atoi(strStart)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -52,6 +55,7 @@ func GetBlocksByHeight(c *gin.Context) {
 	limit , err := strconv.Atoi(strLimit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -69,6 +73,7 @@ func GetBlocksByHeight(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"blocks":listBlocks,
 	})
 	return
@@ -82,6 +87,7 @@ func GetBlockByHeight(c *gin.Context) {
 	height , err := strconv.Atoi(strHeight)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
@@ -89,11 +95,13 @@ func GetBlockByHeight(c *gin.Context) {
 	blockinfo,err := fabsdk.GetBlocks(uint64(height))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"block":blockinfo,
 	})
 	return
@@ -107,11 +115,13 @@ func GetBlockByHash(c *gin.Context) {
 	blockinfo,err := fabsdk.GetBlocksByHash(hash)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"block":blockinfo,
 	})
 	return
@@ -125,11 +135,13 @@ func GetTxByID(c *gin.Context) {
 	txinfo,err := fabsdk.GetTransactionByTxId(hash)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"tx":txinfo,
 	})
 	return
@@ -143,11 +155,13 @@ func GetBlockByTxHash(c *gin.Context) {
 	blockinfo,err := fabsdk.GetBlocksByTxId(hash)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
 			"err":err.Error(),
 		})
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
+		"success":true,
 		"block":blockinfo,
 	})
 	return
