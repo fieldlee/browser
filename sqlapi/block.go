@@ -21,6 +21,7 @@ func GetInfo (c *gin.Context) {
 		})
 		return
 	}
+	response.BCI.Height = response.BCI.Height - 1
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
 		"info":response,
