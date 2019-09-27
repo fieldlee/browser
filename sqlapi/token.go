@@ -49,7 +49,7 @@ func Token(c *gin.Context) {
 
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"tokens":tList,
+		"info":tList,
 	})
 	return
 }
@@ -83,7 +83,7 @@ func TokenHistory(c *gin.Context){
 
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"history":historylist,
+		"info":historylist,
 	})
 	return
 }

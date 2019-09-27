@@ -26,7 +26,7 @@ func GetAccounts(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"accounts":accountList,
+		"info":accountList,
 	})
 	return
 }
@@ -63,7 +63,7 @@ func GetAccount(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"account":accountList,
+		"info":accountList,
 	})
 	return
 }

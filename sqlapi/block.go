@@ -101,7 +101,7 @@ func GetBlocksByHeight(c *gin.Context) {
 
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"blocks":listBlocks,
+		"info":listBlocks,
 	})
 	return
 }
@@ -164,7 +164,7 @@ func GetBlockByHeight(c *gin.Context) {
 
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"block":tmpBck,
+		"info":tmpBck,
 	})
 	return
 }
@@ -216,7 +216,7 @@ func GetBlockByHash(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"block":tmpBck,
+		"info":tmpBck,
 	})
 	return
 }
@@ -245,7 +245,7 @@ func GetTxByID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"tx":txinfo,
+		"info":txinfo,
 	})
 	return
 }
@@ -307,7 +307,7 @@ func GetBlockByTxHash(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"block":tmpBck,
+		"info":tmpBck,
 	})
 	return
 }
@@ -337,7 +337,7 @@ func GetTxsByAccount(c *gin.Context){
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"txs":txinfo,
+		"info":txinfo,
 	})
 	return
 }
@@ -367,7 +367,7 @@ func GetTxsByToken(c *gin.Context){
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"txs":txinfo,
+		"info":txinfo,
 	})
 	return
 }
@@ -394,7 +394,7 @@ func GetTxHeight(c *gin.Context){
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"txcount":count,
+		"info":count,
 	})
 	return
 }
@@ -439,7 +439,7 @@ func GetTxsByHeigth(c *gin.Context){
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"txs":txs,
+		"info":txs,
 	})
 	return
 }
