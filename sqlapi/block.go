@@ -26,6 +26,7 @@ func GetInfo (c *gin.Context) {
 		"success":true,
 		"info":response,
 	})
+	return
 }
 // Get Block by height
 func GetBlocksByHeight(c *gin.Context) {

@@ -94,4 +94,5 @@ func SyncBlockTx(c *gin.Context) {
 	c.JSON(http.StatusOK,gin.H{
 		"info":true,
 	})
+	return
 }

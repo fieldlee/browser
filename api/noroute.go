@@ -10,4 +10,5 @@ func NoRouterHandle(c *gin.Context){
 		"success":false,
 		"msg":"the router not found",
 	})
+	return
 }

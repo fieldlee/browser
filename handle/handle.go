@@ -117,7 +117,7 @@ func (f FabSdk)GetBlocksByHash(hash string)(model.Block,error){
 		fmt.Errorf(err.Error())
 		return model.Block{},err
 	}
-	fmt.Println(blockinfo)
+
 	listTx := make([]model.TransactionDetail,0)
 	for _,data := range blockinfo.Data.Data{
 		txDetail,err := utils.GetTransactionInfoFromData(data,true)
