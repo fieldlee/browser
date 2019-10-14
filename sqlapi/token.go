@@ -72,7 +72,7 @@ func TokenHistory(c *gin.Context){
 		})
 		return
 	}
-	historylist,err :=fabsdk.GetTokenHistory(postToken.Token)
+	hisList,err := fabsdk.GetTokenHistory(postToken.Token)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,gin.H{
 			"success":false,
@@ -83,7 +83,7 @@ func TokenHistory(c *gin.Context){
 
 	c.JSON(http.StatusOK,gin.H{
 		"success":true,
-		"info":historylist,
+		"info":hisList,
 	})
 	return
 }
