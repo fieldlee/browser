@@ -386,15 +386,15 @@ func (s *SqlCliet)QueryTxsNum()(int,error){
 	return count,nil
 }
 func (s *SqlCliet)QueryTxsNumByTypes(types []string)(int,error){
-	stmt,err := s.DB.Prepare(" select count(*) as txcount  from transactions where method in (?)")
+	stmt,err := s.DB.Prepare(" select count(*) as txcount  from transactions where method in ?")
 	defer stmt.Close()
 	if err != nil {
 		return 0 , err
 	}
 
-	strType := strings.Join(types,",")
+	//strType := strings.Join(types,",")
 
-	row := stmt.QueryRow(strType)
+	row := stmt.QueryRow(types)
 	var count = 0
 	err = row.Scan(&count)
 	if err != nil {
