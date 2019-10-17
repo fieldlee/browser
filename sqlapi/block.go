@@ -413,7 +413,7 @@ func GetTxHeightByTypes(c *gin.Context){
 	defer sqlClient.CloseSql()
 
 	type Types struct {
-		Types []string `json:"types"`
+		Types []interface{} `json:"types"`
 	}
 	types := new(Types)
 	err = c.BindJSON(types)
@@ -472,7 +472,7 @@ func GetTxsByTypes(c *gin.Context){
 	}
 
 	type Types struct {
-		Types []string `json:"types"`
+		Types []interface{} `json:"types"`
 	}
 
 	types := new(Types)

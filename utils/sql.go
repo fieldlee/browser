@@ -385,16 +385,21 @@ func (s *SqlCliet)QueryTxsNum()(int,error){
 	}
 	return count,nil
 }
-func (s *SqlCliet)QueryTxsNumByTypes(types []string)(int,error){
-	stmt,err := s.DB.Prepare(" select count(*) as txcount  from transactions where method in ?")
+func (s *SqlCliet)QueryTxsNumByTypes(types []interface{})(int,error){
+	fh := make([]string,0)
+	for i := range types{
+		fmt.Println(i)
+		fh = append(fh,"?")
+	}
+	fhstr := strings.Join(fh,",")
+	query := fmt.Sprintf(" select count(*) as txcount  from transactions where method in (%s)",fhstr)
+	stmt,err := s.DB.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
 		return 0 , err
 	}
-
 	//strType := strings.Join(types,",")
-
-	row := stmt.QueryRow(types)
+	row := stmt.QueryRow(types...)
 	var count = 0
 	err = row.Scan(&count)
 	if err != nil {
@@ -445,7 +450,7 @@ func (s *SqlCliet)QueryTxsByRange(curHeight int,limit int)([]model.TransactionDe
 	return listTX,nil
 }
 
-func (s *SqlCliet)QueryTxsByTypes(curHeight int,limit int,types []string)([]model.TransactionDetail,error){
+func (s *SqlCliet)QueryTxsByTypes(curHeight int,limit int,types []interface{})([]model.TransactionDetail,error){
 	height,err := s.QueryTxsNumByTypes(types)
 	if err != nil {
 		return nil , err
@@ -453,14 +458,22 @@ func (s *SqlCliet)QueryTxsByTypes(curHeight int,limit int,types []string)([]mode
 
 	offset := height-curHeight
 
-	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime from transactions where method in (?) order by createtime desc limit ? offset ?")
+	fh := make([]string,0)
+	for i := range types{
+		fmt.Println(i)
+		fh = append(fh,"?")
+	}
+	fhstr := strings.Join(fh,",")
+	query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) order by createtime desc limit ? offset ? ",fhstr)
+	stmt,err := s.DB.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
 		return nil , err
 	}
-	strType := strings.Join(types,",")
-
-	rows,err := stmt.Query(strType,limit,offset)
+	//strType := strings.Join(types,",")
+	types = append(types,limit)
+	types = append(types,offset)
+	rows,err := stmt.Query(types...)
 	if err != nil {
 		return nil , err
 	}
