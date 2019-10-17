@@ -29,5 +29,5 @@ require (
 	google.golang.org/appengine v1.4.0 // indirect
 	google.golang.org/genproto v0.0.0-20190327125643-d831d65fe17d // indirect
 	google.golang.org/grpc v1.23.0 // indirect
-	k8s.io/client-go v11.0.0+incompatible
+
 )
