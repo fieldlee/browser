@@ -399,6 +399,109 @@ func GetTxHeight(c *gin.Context){
 	})
 	return
 }
+
+// Get Txs heigth
+func GetTxHeightByTypes(c *gin.Context){
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+
+	type Types struct {
+		Types []string `json:"types"`
+	}
+	types := new(Types)
+	err = c.BindJSON(types)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	count,err := sqlClient.QueryTxsNumByTypes(types.Types)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"success":true,
+		"info":count,
+	})
+	return
+}
+
+
+// Get Txs heigth by types
+func GetTxsByTypes(c *gin.Context){
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	defer sqlClient.CloseSql()
+
+	strStart := c.Param("start")
+	strLimit := c.Param("limit")
+	start , err := strconv.Atoi(strStart)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	limit , err := strconv.Atoi(strLimit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+
+	type Types struct {
+		Types []string `json:"types"`
+	}
+
+	types := new(Types)
+
+	err = c.BindJSON(types)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+
+
+	txs,err :=sqlClient.QueryTxsByTypes(start,limit,types.Types)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"success":true,
+		"info":txs,
+	})
+	return
+}
+
 // Get Txs heigth
 func GetTxsByHeigth(c *gin.Context){
 	sqlClient,err := utils.InitSql()

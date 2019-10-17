@@ -88,14 +88,18 @@ func setupRouter() *gin.Engine {
 		{
 			sqltx.GET("/info",sqlapi.GetTxHeight)
 			sqltx.GET("/list/:start/:limit",sqlapi.GetTxsByHeigth)
+			sqltx.POST("/height",sqlapi.GetTxHeightByTypes)
+			sqltx.POST("/list/:start/:limit",sqlapi.GetTxsByTypes)
 			sqltx.GET("/id/:id",sqlapi.GetTxByID)
 		}
 		sql.GET("/info",sqlapi.GetInfo)
 		sql.GET("/token",sqlapi.Token)
+		//根据token获取转账记录
 		sql.GET("/token/:token",sqlapi.GetTxsByToken)
 		sql.POST("/token",sqlapi.TokenHistory)
 		sql.POST("/account",api.GetAccount)
 		sql.GET("/txs/:account",sqlapi.GetTxsByAccount)
+
 	}
 
 	r.POST("/invoke",api.Invoke)

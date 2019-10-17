@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"strings"
 	"time"
 )
 
@@ -384,7 +385,23 @@ func (s *SqlCliet)QueryTxsNum()(int,error){
 	}
 	return count,nil
 }
+func (s *SqlCliet)QueryTxsNumByTypes(types []string)(int,error){
+	stmt,err := s.DB.Prepare(" select count(*) as txcount  from transactions where method in (?)")
+	defer stmt.Close()
+	if err != nil {
+		return 0 , err
+	}
 
+	strType := strings.Join(types,",")
+
+	row := stmt.QueryRow(strType)
+	var count = 0
+	err = row.Scan(&count)
+	if err != nil {
+		return 0 , err
+	}
+	return count,nil
+}
 func (s *SqlCliet)QueryTxsByRange(curHeight int,limit int)([]model.TransactionDetail,error){
 	height,err := s.QueryTxsNum()
 	if err != nil {
@@ -400,6 +417,50 @@ func (s *SqlCliet)QueryTxsByRange(curHeight int,limit int)([]model.TransactionDe
 	}
 
 	rows,err := stmt.Query(limit,offset)
+	if err != nil {
+		return nil , err
+	}
+	listTX := make([]model.TransactionDetail,0)
+	for rows.Next(){
+		tx := model.TransactionDetail{}
+		var time = time.Now()
+		var method = ""
+		var args = ""
+		var signed = ""
+
+		err = rows.Scan(&tx.TransactionId, &method, &args,&signed,&time)
+		if err != nil {
+			fmt.Printf(err.Error())
+			continue
+		}
+
+		tx.CreateTime = time.Format("2006-01-02 15:04:05")
+		var argslist = make([]string,0)
+		argslist = append(argslist,method)
+		argslist = append(argslist,args)
+		argslist = append(argslist,signed)
+		tx.Args = argslist
+		listTX = append(listTX,tx)
+	}
+	return listTX,nil
+}
+
+func (s *SqlCliet)QueryTxsByTypes(curHeight int,limit int,types []string)([]model.TransactionDetail,error){
+	height,err := s.QueryTxsNumByTypes(types)
+	if err != nil {
+		return nil , err
+	}
+
+	offset := height-curHeight
+
+	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime from transactions where method in (?) order by createtime desc limit ? offset ?")
+	defer stmt.Close()
+	if err != nil {
+		return nil , err
+	}
+	strType := strings.Join(types,",")
+
+	rows,err := stmt.Query(strType,limit,offset)
 	if err != nil {
 		return nil , err
 	}
@@ -529,6 +590,7 @@ func (s *SqlCliet)QueryTokens()([]model.Token,error){
 
 	return tokenList,nil
 }
+
 
 func (s *SqlCliet)CloseSql(){
 	s.DB.Close()
