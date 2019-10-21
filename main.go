@@ -72,7 +72,7 @@ func setupRouter() *gin.Engine {
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
 
-	r.Use(checkIPs(),Logger())
+	r.Use(Logger())
 
 	r.NoRoute(api.NoRouterHandle)
 	r.GET("/",func(c *gin.Context){
