@@ -38,6 +38,20 @@ func InitConfig () *Config {
 	return Con
 }
 
+func GetWhiteIPs()[]string{
+	ymlCon := InitConfig()
+	whiteiplist := ymlCon.V.Get("whiteips")
+	iplist := make([]string,0)
+	v := reflect.ValueOf(whiteiplist)
+	if v.Kind() == reflect.Slice {
+		l := v.Len()
+		for i:=0;i<l;i++  {
+			iplist = append(iplist,fmt.Sprintf("%v",v.Index(i)))
+		}
+	}
+	return iplist
+}
+
 // 从SDK中Block.BlockDara.Data中提取交易具体信息
 func GetTransactionInfoFromData(data []byte, needArgs bool) (*model.TransactionDetail, error) {
 	env, err := putils.GetEnvelopeFromBlock(data)

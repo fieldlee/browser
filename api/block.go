@@ -168,5 +168,25 @@ func GetBlockByTxHash(c *gin.Context) {
 	return
 }
 
+// Get Block
+
+func GetInfo(c *gin.Context){
+	fabsdk := handle.InitSdk()
+	defer fabsdk.Close()
+	info ,err := fabsdk.GetInfo()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"success":false,
+			"err":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"success":true,
+		"info":info,
+	})
+	return
+}
+
 
 

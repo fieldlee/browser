@@ -3,6 +3,8 @@ package main
 import (
 	"browser/api"
 	"browser/sqlapi"
+	"browser/utils"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -34,11 +36,38 @@ func Logger() gin.HandlerFunc {
 	}
 }
 
+func checkIPs() gin.HandlerFunc {
+	return func (c *gin.Context) {
+		clientIP := c.ClientIP()
+
+		check := false
+
+		listips := utils.GetWhiteIPs()
+
+		for _,ip := range listips{
+			if ip == clientIP{
+				check = true
+				break
+			}
+		}
+
+		if !check {
+			c.JSON(http.StatusInternalServerError,gin.H{
+				"success":false,
+				"err":errors.New("the client ip address is not allowed!"),
+			})
+			return
+		}
+	}
+}
+
+
 func setupRouter() *gin.Engine {
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
 	r.NoRoute(api.NoRouterHandle)
 	r.Use(Logger())
+	r.Use(checkIPs())
 	r.GET("/",func(c *gin.Context){
 		c.Redirect(http.StatusMovedPermanently,"/s/info")
 	})
@@ -69,6 +98,9 @@ func setupRouter() *gin.Engine {
 
 		// get account
 		hlc.GET("/query/:account", api.QueryHold)
+
+		// get info
+		hlc.GET("/info",api.GetInfo)
 	}
 
 	sql := r.Group("/s")
