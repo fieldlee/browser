@@ -32,7 +32,6 @@ func Logger() gin.HandlerFunc {
 				"err":errors.New(fmt.Sprintf("the client ip address is not allowed!")),
 			})
 		}
-
 		// 结束时间
 		end := time.Now()
 		//执行时间
@@ -67,6 +66,22 @@ func checkIPs(c *gin.Context) bool{
 		return  check
 }
 
+func CheckIpList()gin.HandlerFunc {
+
+	return func (c *gin.Context) {
+		// 处理请求
+		check := checkIPs(c)
+		if check {
+			c.Next()
+		}else{
+			c.JSON(http.StatusInternalServerError,gin.H{
+				"success":false,
+				"err":errors.New(fmt.Sprintf("the client ip address is not allowed!")),
+			})
+			return
+		}
+	}
+}
 
 func setupRouter() *gin.Engine {
 	gin.SetMode(gin.DebugMode)
@@ -80,6 +95,8 @@ func setupRouter() *gin.Engine {
 	})
 	hlc := r.Group("/c")
 	{
+		//hlc.Use(CheckIpList())
+
 		block := hlc.Group("/block")
 		{
 			// 默认获得块列表
@@ -112,6 +129,8 @@ func setupRouter() *gin.Engine {
 
 	sql := r.Group("/s")
 	{
+		//sql.Use(CheckIpList())
+
 		sqlblock:=sql.Group("/block")
 		{
 			// 默认获得块列表
