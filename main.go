@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"sort"
 	"time"
 )
 
@@ -40,18 +41,14 @@ func checkIPs() gin.HandlerFunc {
 	return func (c *gin.Context) {
 		clientIP := c.ClientIP()
 
-		check := false
+		//check := false
 
 		listips := utils.GetWhiteIPs()
 
-		for _,ip := range listips{
-			if ip == clientIP{
-				check = true
-				break
-			}
-		}
+		i := sort.SearchStrings(listips,clientIP)
+		//for _,ip := range listips{if ip == clientIP{check = true break}}
 
-		if !check {
+		if !(i< len(listips) && listips[i]==clientIP) {
 			c.JSON(http.StatusInternalServerError,gin.H{
 				"success":false,
 				"err":errors.New("the client ip address is not allowed!"),
