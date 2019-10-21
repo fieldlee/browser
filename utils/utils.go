@@ -52,6 +52,15 @@ func GetWhiteIPs()[]string{
 	return iplist
 }
 
+func Contain(list []string,obj string)bool{
+	for _,tmp := range list{
+		if tmp == obj{
+			return  true
+		}
+	}
+	return false
+}
+
 // 从SDK中Block.BlockDara.Data中提取交易具体信息
 func GetTransactionInfoFromData(data []byte, needArgs bool) (*model.TransactionDetail, error) {
 	env, err := putils.GetEnvelopeFromBlock(data)

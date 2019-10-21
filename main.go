@@ -5,12 +5,16 @@ import (
 	"browser/sqlapi"
 	"browser/utils"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
-	"sort"
+
 	"time"
+	"sync"
 )
+
+var whiteListIPS sync.Map
 
 func Logger() gin.HandlerFunc {
 	logClient := logrus.New()
@@ -19,7 +23,16 @@ func Logger() gin.HandlerFunc {
 		// 开始时间
 		start := time.Now()
 		// 处理请求
-		c.Next()
+		check := checkIPs(c)
+		if check {
+			c.Next()
+		}else{
+			c.JSON(http.StatusInternalServerError,gin.H{
+				"success":false,
+				"err":errors.New(fmt.Sprintf("the client ip address is not allowed!")),
+			})
+		}
+
 		// 结束时间
 		end := time.Now()
 		//执行时间
@@ -37,34 +50,31 @@ func Logger() gin.HandlerFunc {
 	}
 }
 
-func checkIPs() gin.HandlerFunc {
-	return func (c *gin.Context) {
+func checkIPs(c *gin.Context) bool{
+
 		clientIP := c.ClientIP()
-
-		//check := false
-
-		listips := utils.GetWhiteIPs()
-
-		i := sort.SearchStrings(listips,clientIP)
-		//for _,ip := range listips{if ip == clientIP{check = true break}}
-
-		if !(i< len(listips) && listips[i]==clientIP) {
-			c.JSON(http.StatusInternalServerError,gin.H{
-				"success":false,
-				"err":errors.New("the client ip address is not allowed!"),
-			})
-			return
+		listips := make([]string,0)
+		check := false
+		ips, ok := whiteListIPS.Load("whiteIps")
+		if ok {
+			listips = ips.([]string)
+			check = utils.Contain(listips,clientIP)
+		}else{
+			listips = utils.GetWhiteIPs()
+			whiteListIPS.LoadOrStore("whiteIps",listips)
+			check = utils.Contain(listips,clientIP)
 		}
-	}
+		return  check
 }
 
 
 func setupRouter() *gin.Engine {
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
+
+	r.Use(checkIPs(),Logger())
+
 	r.NoRoute(api.NoRouterHandle)
-	r.Use(Logger())
-	r.Use(checkIPs())
 	r.GET("/",func(c *gin.Context){
 		c.Redirect(http.StatusMovedPermanently,"/s/info")
 	})
