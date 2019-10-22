@@ -177,24 +177,23 @@ func UpdateBlockAndTx(block cb.Block)error{
 	bckHeader.Number = bck.Number
 	bckHeader.PreviousHash = bck.PreviousHash
 
-	// update tx block
-	fmt.Println(fmt.Sprintf("update previous %d",int(bck.Number-1)))
-	prebck,err := sqlClient.QueryBlockByHeight(int(bck.Number-1))
-
-	if err != nil {
-		return err
-	}
-	fmt.Println(fmt.Sprintf("previous block hash %s previous %s",prebck.DataHash,bck.PreviousHash))
-	err = sqlClient.UpdateTxHash(prebck.DataHash,bck.PreviousHash)
-	if err != nil {
-		return err
-	}
-	// update block hash
-	fmt.Println(fmt.Sprintf("update previous block hash number %d",int(bck.Number-1)))
-	err = sqlClient.UpdateBlockHash(int(bck.Number-1),bck.PreviousHash)
-	if err != nil {
-		return err
-	}
+	//// update tx block
+	//fmt.Println(fmt.Sprintf("update previous %d",int(bck.Number-1)))
+	//prebck,err := sqlClient.QueryBlockByHeight(int(bck.Number-1))
+	//if err != nil {
+	//	return err
+	//}
+	//fmt.Println(fmt.Sprintf("previous block hash %s previous %s",prebck.DataHash,bck.PreviousHash))
+	//err = sqlClient.UpdateTxHash(prebck.DataHash,bck.PreviousHash)
+	//if err != nil {
+	//	return err
+	//}
+	//// update block hash
+	//fmt.Println(fmt.Sprintf("update previous block hash number %d",int(bck.Number-1)))
+	//err = sqlClient.UpdateBlockHash(int(bck.Number-1),bck.PreviousHash)
+	//if err != nil {
+	//	return err
+	//}
 
 	err = sqlClient.InsertBlock(bckHeader)
 	if err != nil {

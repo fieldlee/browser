@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"time"
 )
 
 func SyncBlockTx(c *gin.Context) {
@@ -33,14 +32,18 @@ func SyncBlockTx(c *gin.Context) {
 	}
 	defer sqlClient.CloseSql()
 
-	sqlHeight,err := sqlClient.QueryBlockHeight()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError,gin.H{
-			"err":err.Error(),
-		})
-		return
+	sqlHeight,_ := sqlClient.QueryBlockHeight()
+	//if err != nil {
+	//	c.JSON(http.StatusInternalServerError,gin.H{
+	//		"err":err.Error(),
+	//	})
+	//	return
+	//}
+	start := 0
+	if sqlHeight > 0 {
+		start = sqlHeight + 1
 	}
-	for i:= sqlHeight+1; uint64(i) <= curHeight ;i++  {
+	for i := start; uint64(i) <= curHeight; i++  {
 		if blockinfo ,err := fabsdk.GetBlocks(uint64(i));err != nil {
 			fmt.Errorf(err.Error())
 			continue
@@ -71,24 +74,24 @@ func SyncBlockTx(c *gin.Context) {
 					}
 				}
 			}
-			time.Sleep(time.Duration(500)*time.Microsecond)
+			//time.Sleep(time.Duration(500)*time.Microsecond)
 			///update
-			updateBlock,err := sqlClient.QueryBlockByHeight(i-1)
-			if err != nil {
-				fmt.Println(err.Error())
-				continue
-			}
-			err = sqlClient.UpdateTxHash(curBlock.PreviousHash,updateBlock.DataHash)
-			if err != nil {
-				fmt.Println(err.Error())
-				continue
-			}
-			time.Sleep(1*time.Second)
-			err = sqlClient.UpdateBlockHash(i-1,curBlock.PreviousHash)
-			if err != nil {
-				fmt.Println(err.Error())
-				continue
-			}
+			//updateBlock,err := sqlClient.QueryBlockByHeight(i-1)
+			//if err != nil {
+			//	fmt.Println(err.Error())
+			//	continue
+			//}
+			//err = sqlClient.UpdateTxHash(curBlock.PreviousHash,updateBlock.DataHash)
+			//if err != nil {
+			//	fmt.Println(err.Error())
+			//	continue
+			//}
+			//time.Sleep(1*time.Second)
+			//err = sqlClient.UpdateBlockHash(i-1,curBlock.PreviousHash)
+			//if err != nil {
+			//	fmt.Println(err.Error())
+			//	continue
+			//}
 		}
 	}
 	c.JSON(http.StatusOK,gin.H{
