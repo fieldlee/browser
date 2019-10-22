@@ -27,7 +27,7 @@ type Token struct {
 	Desc   string `json:"desc"`
 	Issuer string `json:"issuer"`
 	Name   string `json:"name"`
-	Status bool `json:"status"`
+	Status bool   `json:"status"`
 	Type   string `json:"type"`
 }
 

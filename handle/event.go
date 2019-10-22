@@ -23,6 +23,9 @@ func (f FabSdk)ListenBlock(){
 	for ;; {
 		select {
 		case ccEvent := <-notifier:
+			fmt.Println("receive block event")
+			fmt.Println(fmt.Sprintf("url:%s",ccEvent.SourceURL))
+			fmt.Println(fmt.Sprintf("block string :%s",ccEvent.Block.String()))
 			err = utils.UpdateBlockAndTx(*ccEvent.Block)
 			if err != nil{
 				fmt.Printf("received ledger event err :%s\n", err.Error())
