@@ -1,7 +1,6 @@
 package handle
 
 import (
-	"browser/utils"
 	"fmt"
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/event"
 	"time"
@@ -25,11 +24,11 @@ func (f FabSdk)ListenBlock(){
 		case ccEvent := <-notifier:
 			fmt.Println("receive block event")
 			fmt.Println(fmt.Sprintf("url:%s",ccEvent.SourceURL))
-			fmt.Println(fmt.Sprintf("block string :%s",ccEvent.Block.String()))
-			err = utils.UpdateBlockAndTx(*ccEvent.Block)
-			if err != nil{
-				fmt.Printf("received ledger event err :%s\n", err.Error())
-			}
+
+			//err = utils.UpdateBlockAndTx(*ccEvent.Block)
+			//if err != nil{
+			//	fmt.Printf("received ledger event err :%s\n", err.Error())
+			//}
 		case <-time.After(time.Second * 60):
 			fmt.Println("timeout while waiting for block event")
 		}
