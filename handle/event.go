@@ -27,21 +27,20 @@ func (f FabSdk)ListenBlock(){
 			fmt.Println("receive block event")
 			fmt.Println(fmt.Sprintf("url:%s",ccEvent.SourceURL))
 
-			err = utils.UpdateBlockAndTx(*ccEvent.Block)
+			tx,err := utils.UpdateBlockAndTx(*ccEvent.Block)
 			if err != nil{
 				fmt.Printf("received ledger event err :%s\n", err.Error())
 			}
 
 			/////// 判断是否发布token
-			curTx := utils.GetTxDetail(*ccEvent.Block)
-			if curTx.Args != nil {
-				if  curTx.Args[0] == "Issue" {
-					fabsdk := InitSdk()
-					defer fabsdk.Close()
-					err = fabsdk.SyncToken()
-					if err != nil {
-						fmt.Println(err.Error())
-					}
+			if tx.Args != nil {
+				if  tx.Args[0] == "Issue" {
+					//fabsdk := InitSdk()
+					//defer fabsdk.Close()
+					//err = fabsdk.SyncToken()
+					//if err != nil {
+					//	fmt.Println(err.Error())
+					//}
 				}
 			}
 
