@@ -23,15 +23,7 @@ func Logger() gin.HandlerFunc {
 		// 开始时间
 		start := time.Now()
 		// 处理请求
-		check := checkIPs(c)
-		if check {
-			c.Next()
-		}else{
-			c.JSON(http.StatusInternalServerError,gin.H{
-				"success":false,
-				"err":errors.New(fmt.Sprintf("the client ip address is not allowed!")),
-			})
-		}
+		c.Next()
 		// 结束时间
 		end := time.Now()
 		//执行时间
@@ -71,24 +63,22 @@ func CheckIpList()gin.HandlerFunc {
 	return func (c *gin.Context) {
 		// 处理请求
 		check := checkIPs(c)
-		if check {
-			c.Next()
-		}else{
+		if !check {
 			c.JSON(http.StatusInternalServerError,gin.H{
 				"success":false,
-				"err":errors.New(fmt.Sprintf("the client ip address is not allowed!")),
+				"err":errors.New(fmt.Sprintf("the client ip address is not allowed!")).Error(),
 			})
+			c.Abort()
 			return
 		}
 	}
 }
 
+
 func setupRouter() *gin.Engine {
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
-
-	r.Use(Logger())
-
+	r.Use(CheckIpList(),Logger())
 	r.NoRoute(api.NoRouterHandle)
 	r.GET("/",func(c *gin.Context){
 		c.Redirect(http.StatusMovedPermanently,"/s/info")
@@ -108,13 +98,11 @@ func setupRouter() *gin.Engine {
 			// 根据tx hash获得块
 			block.GET("/tx/:hash", api.GetBlockByTxHash)
 		}
-
 		tx := hlc.Group("/tx")
 		{
 			// 默认获得指定hash的交易
 			tx.GET("/id/:id",api.GetTxByID)
 		}
-
 		// 获得token
 		hlc.GET("/token", api.SyncToken)
 		// 获得account
