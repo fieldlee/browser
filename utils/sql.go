@@ -41,6 +41,11 @@ func (s *SqlCliet)InsertBlock(block model.BlockHeader)error{
 	if err != nil {
 		return err
 	}
+
+
+	fmt.Println(block)
+	fmt.Println(block.CreateTime)
+
 	t, err := time.Parse("2006-01-02 15:04:05",block.CreateTime)
 	if err != nil {
 		return err
