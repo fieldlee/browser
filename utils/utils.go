@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"browser/handle"
 	"browser/model"
 	"encoding/hex"
+
 	"errors"
 	"fmt"
 	"github.com/golang/protobuf/proto"
@@ -209,6 +211,20 @@ func UpdateBlockAndTx(block cb.Block)error{
 	return nil
 }
 
+func GetTxDetail(block cb.Block)*model.TransactionDetail{
+	listTx := make([]model.TransactionDetail,0)
+	for _,data := range block.Data.Data{
+		txDetail,err := GetTransactionInfoFromData(data,true)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		listTx = append(listTx,*txDetail)
+	}
+	if len(listTx) == 0 {
+		return nil
+	}
+	return &listTx[0]
+}
 
 func TypeSwitch(arg interface{}){
 	vType := reflect.TypeOf(arg)

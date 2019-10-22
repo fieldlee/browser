@@ -191,3 +191,27 @@ func (f FabSdk)GetTransactionByTxId(txid string)(model.TransactionDetail,error){
 	return result,nil
 }
 
+func (f FabSdk)SyncToken()error{
+	tokens,err := f.GetTokens()
+	if err != nil{
+		return err
+	}
+	sqlClient,err := utils.InitSql()
+	if err != nil {
+		return err
+	}
+	defer sqlClient.CloseSql()
+
+	err = sqlClient.RemoveToken()
+	if err != nil {
+		return err
+	}
+	for i := 0;i<len(tokens) ;i++  {
+		err = sqlClient.InsertToken(tokens[i])
+		if err != nil {
+			fmt.Println(err.Error())
+			continue
+		}
+	}
+	return nil
+}
