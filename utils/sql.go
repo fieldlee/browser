@@ -273,7 +273,7 @@ func (s *SqlCliet)QueryBlockHashByTxId(hash string)(string,error){
 }
 
 func (s *SqlCliet)QueryTxs(hash string)(model.TransactionDetail,error){
-	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime  from transactions where txhash = ?")
+	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime from transactions where txhash = ?")
 	defer stmt.Close()
 	if err != nil {
 		return model.TransactionDetail{} , err
@@ -304,7 +304,7 @@ func (s *SqlCliet)QueryTxs(hash string)(model.TransactionDetail,error){
 }
 
 func (s *SqlCliet)QueryTxsByAccount(account string)([]model.TransactionDetail,error){
-	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime  from transactions where method = 'transfer' and args like ?")
+	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime from transactions where method = 'transfer' and args like ?")
 	defer stmt.Close()
 	if err != nil {
 		return nil , err
@@ -338,7 +338,6 @@ func (s *SqlCliet)QueryTxsByAccount(account string)([]model.TransactionDetail,er
 	}
 	return listTX,nil
 }
-
 
 func (s *SqlCliet)QueryTxsByToken(token string)([]model.TransactionDetail,error){
 	stmt,err := s.DB.Prepare("select txhash,method,args,signed,createtime  from transactions where method = 'transfer' and args like ?")
@@ -377,7 +376,7 @@ func (s *SqlCliet)QueryTxsByToken(token string)([]model.TransactionDetail,error)
 }
 
 func (s *SqlCliet)QueryTxsNum()(int,error){
-	stmt,err := s.DB.Prepare(" select count(*) as txcount  from transactions")
+	stmt,err := s.DB.Prepare(" select count(*) as txcount from transactions")
 	defer stmt.Close()
 	if err != nil {
 		return 0 , err
@@ -573,9 +572,7 @@ func (s *SqlCliet)QueryTokensById(token string)([]model.Token,error){
 
 func (s *SqlCliet)QueryTokens()([]model.Token,error){
 	//name_
-
 	//tokenstr := "USAVY.T,USALXN.T,USIVZ.T"
-
 	//stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens ")
 
 	stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens WHERE name_ in ('USAVY.T','USALXN.T','USIVZ.T')")
