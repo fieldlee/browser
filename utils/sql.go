@@ -572,7 +572,13 @@ func (s *SqlCliet)QueryTokensById(token string)([]model.Token,error){
 }
 
 func (s *SqlCliet)QueryTokens()([]model.Token,error){
-	stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens ")
+	//name_
+
+	//tokenstr := "USAVY.T,USALXN.T,USIVZ.T"
+
+	//stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens ")
+
+	stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens WHERE name_ in ('USAVY.T','USALXN.T','USIVZ.T')")
 	defer stmt.Close()
 	if err != nil {
 		return nil , err

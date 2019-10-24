@@ -29,7 +29,7 @@ func Token(c *gin.Context) {
 		return
 	}
 
-	tList := []model.TokenInfo{}
+	tList := make([]model.TokenInfo,0)
 
 	for _, t := range tokens {
 		ti := model.TokenInfo{}
