@@ -122,8 +122,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/utils/sql.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-162">
-              <caret line="473" column="188" selection-start-line="473" selection-start-column="188" selection-end-line="473" selection-end-column="188" />
+            <state relative-caret-position="222">
+              <caret line="400" column="111" selection-start-line="400" selection-start-column="111" selection-end-line="400" selection-end-column="111" />
               <folding>
                 <element signature="n#!!block;n#UpdateTxHash#0" />
                 <element signature="n#!!block;n#InsertTx#0" />
@@ -429,7 +429,7 @@
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16210173" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16210173" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -846,8 +846,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/sql.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-162">
-          <caret line="473" column="188" selection-start-line="473" selection-start-column="188" selection-end-line="473" selection-end-column="188" />
+        <state relative-caret-position="222">
+          <caret line="400" column="111" selection-start-line="400" selection-start-column="111" selection-end-line="400" selection-end-column="111" />
           <folding>
             <element signature="n#!!block;n#UpdateTxHash#0" />
             <element signature="n#!!block;n#InsertTx#0" />
