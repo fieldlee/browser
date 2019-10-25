@@ -396,7 +396,9 @@ func (s *SqlCliet)QueryTxsNumByTypes(types []interface{})(int,error){
 		fh = append(fh,"?")
 	}
 	fhstr := strings.Join(fh,",")
-	query := fmt.Sprintf(" select count(*) as txcount  from transactions where method in (%s)",fhstr)
+	//USAVY.T,USALXN.T,USIVZ.T
+	//query := fmt.Sprintf(" select count(*) as txcount  from transactions where method in (%s)",fhstr)
+	query := fmt.Sprintf(" select count(*) as txcount  from transactions where method in (%s) and (args like '%USAVY.T%' or args like '%USALXN.T%' or args like '%USIVZ.T%' )",fhstr)
 	stmt,err := s.DB.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
@@ -468,7 +470,8 @@ func (s *SqlCliet)QueryTxsByTypes(curHeight int,limit int,types []interface{})([
 		fh = append(fh,"?")
 	}
 	fhstr := strings.Join(fh,",")
-	query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) order by createtime desc limit ? offset ? ",fhstr)
+	//query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) order by createtime desc limit ? offset ? ",fhstr)
+	query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) and (args like '%USAVY.T%' or args like '%USALXN.T%' or args like '%USIVZ.T%' ) order by createtime desc limit ? offset ? ",fhstr)
 	stmt,err := s.DB.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
