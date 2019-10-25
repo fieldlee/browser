@@ -35,12 +35,12 @@ func (f FabSdk)ListenBlock(){
 			/////// 判断是否发布token
 			if tx.Args != nil {
 				if  tx.Args[0] == "Issue" {
-					//fabsdk := InitSdk()
-					//defer fabsdk.Close()
-					//err = fabsdk.SyncToken()
-					//if err != nil {
-					//	fmt.Println(err.Error())
-					//}
+					fabsdk := InitSdk()
+					defer fabsdk.Close()
+					err = fabsdk.SyncToken()
+					if err != nil {
+						fmt.Println(err.Error())
+					}
 				}
 			}
 
