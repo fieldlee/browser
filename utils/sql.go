@@ -22,7 +22,7 @@ func InitSql()(*SqlCliet,error) {
 	dbname := ymlCon.V.GetString("dbname")
 	var err error
 	var db *sql.DB
-	db,err = sql.Open("mysql",dbuser+":"+dbpwd+"@tcp("+dbhost+")/"+dbname+"?charset=utf8&parseTime=true")
+	db,err = sql.Open("mysql",dbuser+":"+dbpwd+"@tcp("+dbhost+":3308)/"+dbname+"?charset=utf8&parseTime=true")
 	if err != nil {
 		return nil,err
 	}
