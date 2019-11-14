@@ -397,15 +397,19 @@ func (s *SqlCliet)QueryTxsNumByTypes(types []interface{})(int,error){
 	}
 	fhstr := strings.Join(fh,",")
 	//USAVY.T,USALXN.T,USIVZ.T
-	//query := fmt.Sprintf(" select count(*) as txcount  from transactions where method in (%s)",fhstr)
-	query := fmt.Sprintf(" select count(*) as txcount  from transactions where method in (%s) and (args like '%%USAVY.T%%' or args like '%%USALXN.T%%' or args like '%%USIVZ.T%%' )",fhstr)
+	query := fmt.Sprintf(" select count(*) as txcount  from transactions where method in (%s)",fhstr)
+	//query := fmt.Sprintf(" select count(*) as txcount  from transactions where method in (%s) and (args like '%%USAVY.T%%' or args like '%%USALXN.T%%' or args like '%%USIVZ.T%%' )",fhstr)
 	stmt,err := s.DB.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
 		return 0 , err
 	}
-	//strType := strings.Join(types,",")
-	row := stmt.QueryRow(types...)
+	strTypes := make([]string,0)
+	for _,v := range types{
+		strTypes = append(strTypes,v.(string))
+	}
+	strType := strings.Join(strTypes,",")
+	row := stmt.QueryRow(strType)
 	var count = 0
 	err = row.Scan(&count)
 	if err != nil {
@@ -470,17 +474,21 @@ func (s *SqlCliet)QueryTxsByTypes(curHeight int,limit int,types []interface{})([
 		fh = append(fh,"?")
 	}
 	fhstr := strings.Join(fh,",")
-	//query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) order by createtime desc limit ? offset ? ",fhstr)
-	query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) and (args like '%%USAVY.T%%' or args like '%%USALXN.T%%' or args like '%%USIVZ.T%%' ) order by createtime desc limit ? offset ? ",fhstr)
+	query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) order by createtime desc limit ? offset ? ",fhstr)
+	//query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) and (args like '%%USAVY.T%%' or args like '%%USALXN.T%%' or args like '%%USIVZ.T%%' ) order by createtime desc limit ? offset ? ",fhstr)
 	stmt,err := s.DB.Prepare(query)
 	defer stmt.Close()
 	if err != nil {
 		return nil , err
 	}
-	//strType := strings.Join(types,",")
+	strTypes := make([]string,0)
+	for _,v := range types{
+		strTypes = append(strTypes,v.(string))
+	}
+	strType := strings.Join(strTypes,",")
 	types = append(types,limit)
 	types = append(types,offset)
-	rows,err := stmt.Query(types...)
+	rows,err := stmt.Query(strType)
 	if err != nil {
 		return nil , err
 	}
@@ -576,9 +584,9 @@ func (s *SqlCliet)QueryTokensById(token string)([]model.Token,error){
 func (s *SqlCliet)QueryTokens()([]model.Token,error){
 	//name_
 	//tokenstr := "USAVY.T,USALXN.T,USIVZ.T"
-	//stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens ")
+	stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens ")
 
-	stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens WHERE name_ in ('USAVY.T','USALXN.T','USIVZ.T')")
+	//stmt,err := s.DB.Prepare("select name_,amount,issuer,status,type_,action_,desc_  from tokens WHERE name_ in ('USAVY.T','USALXN.T','USIVZ.T')")
 	defer stmt.Close()
 	if err != nil {
 		return nil , err
