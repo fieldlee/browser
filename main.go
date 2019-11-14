@@ -44,6 +44,7 @@ func Logger() gin.HandlerFunc {
 func checkIPs(c *gin.Context) bool{
 
 		clientIP := c.ClientIP()
+		fmt.Println("clientIP:",clientIP)
 		listips := make([]string,0)
 		check := false
 		ips, ok := whiteListIPS.Load("whiteIps")
