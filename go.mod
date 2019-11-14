@@ -31,3 +31,13 @@ require (
 	google.golang.org/grpc v1.23.0 // indirect
 
 )
+
+    replace golang.org/x/text => github.com/golang/text latest
+    replace google.golang.org/genproto => github.com/SasukeBo/genproto latest
+    replace golang.org/x/net => github.com/golang/net latest
+    replace golang.org/x/sys => github.com/golang/sys latest
+    replace google.golang.org/grpc => github.com/grpc/grpc-go latest
+    replace google.golang.org/appengine => github.com/golang/appengine latest
+    replace golang.org/x/sync => github.com/golang/sync latest
+
+

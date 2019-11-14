@@ -47,7 +47,7 @@ func (f FabSdk)GetTokenHistory(tokenName string)([]model.HistoryToken,error) {
 		fmt.Printf("Failed to create new channel client: %s", err.Error())
 		return nil,err
 	}
-	fmt.Println(tokenName)
+
 	args := make([][]byte,0)
 	args = append(args,[]byte(tokenName))
 	response,err := client.Query(channel.Request{
