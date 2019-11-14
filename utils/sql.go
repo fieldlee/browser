@@ -391,10 +391,7 @@ func (s *SqlCliet)QueryTxsNum()(int,error){
 }
 func (s *SqlCliet)QueryTxsNumByTypes(types []interface{})(int,error){
 	fh := make([]string,0)
-	fmt.Println("QueryTxsNum Types:")
-	fmt.Println(types)
-	for i := range types{
-		fmt.Println(i)
+	for i:=0;i<len(types) ;i++  {
 		fh = append(fh,"?")
 	}
 	fhstr := strings.Join(fh,",")
@@ -471,10 +468,11 @@ func (s *SqlCliet)QueryTxsByTypes(curHeight int,limit int,types []interface{})([
 	offset := height-curHeight
 
 	fh := make([]string,0)
-	for i := range types{
-		fmt.Println(i)
+
+	for i:=0;i<len(types) ;i++  {
 		fh = append(fh,"?")
 	}
+
 	fhstr := strings.Join(fh,",")
 	query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) order by createtime desc limit ? offset ? ",fhstr)
 	//query := fmt.Sprintf("select txhash,method,args,signed,createtime from transactions where method in (%s) and (args like '%%USAVY.T%%' or args like '%%USALXN.T%%' or args like '%%USIVZ.T%%' ) order by createtime desc limit ? offset ? ",fhstr)
