@@ -411,7 +411,7 @@ func (s *SqlCliet)QueryTxsNumByTypes(types []interface{})(int,error){
 	//	strTypes = append(strTypes,v.(string))
 	//}
 	//strType := strings.Join(strTypes,",")
-	row := stmt.QueryRow()
+	row := stmt.QueryRow(types)
 	var count = 0
 	err = row.Scan(&count)
 	if err != nil {
@@ -490,7 +490,7 @@ func (s *SqlCliet)QueryTxsByTypes(curHeight int,limit int,types []interface{})([
 	//strType := strings.Join(strTypes,",")
 	types = append(types,limit)
 	types = append(types,offset)
-	rows,err := stmt.Query()
+	rows,err := stmt.Query(types)
 	if err != nil {
 		return nil , err
 	}
