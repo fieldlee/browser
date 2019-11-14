@@ -406,12 +406,12 @@ func (s *SqlCliet)QueryTxsNumByTypes(types []interface{})(int,error){
 	if err != nil {
 		return 0 , err
 	}
-	//strTypes := make([]string,0)
-	//for _,v := range types{
-	//	strTypes = append(strTypes,v.(string))
-	//}
+	strTypes := make([]string,0)
+	for _,v := range types{
+		strTypes = append(strTypes,v.(string))
+	}
 	//strType := strings.Join(strTypes,",")
-	row := stmt.QueryRow(types)
+	row := stmt.QueryRow(strTypes)
 	var count = 0
 	err = row.Scan(&count)
 	if err != nil {
@@ -483,14 +483,14 @@ func (s *SqlCliet)QueryTxsByTypes(curHeight int,limit int,types []interface{})([
 	if err != nil {
 		return nil , err
 	}
-	//strTypes := make([]string,0)
-	//for _,v := range types{
-	//	strTypes = append(strTypes,v.(string))
-	//}
+	strTypes := make([]string,0)
+	for _,v := range types{
+		strTypes = append(strTypes,v.(string))
+	}
 	//strType := strings.Join(strTypes,",")
 	types = append(types,limit)
 	types = append(types,offset)
-	rows,err := stmt.Query(types)
+	rows,err := stmt.Query(strTypes)
 	if err != nil {
 		return nil , err
 	}
