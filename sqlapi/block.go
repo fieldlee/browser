@@ -439,7 +439,6 @@ func GetTxHeightByTypes(c *gin.Context){
 	return
 }
 
-
 // Get Txs heigth by types
 func GetTxsByTypes(c *gin.Context){
 	sqlClient,err := utils.InitSql()

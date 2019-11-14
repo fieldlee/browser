@@ -391,6 +391,8 @@ func (s *SqlCliet)QueryTxsNum()(int,error){
 }
 func (s *SqlCliet)QueryTxsNumByTypes(types []interface{})(int,error){
 	fh := make([]string,0)
+	fmt.Println("QueryTxsNum Types:")
+	fmt.Println(types)
 	for i := range types{
 		fmt.Println(i)
 		fh = append(fh,"?")
