@@ -5,6 +5,7 @@ import (
 	"browser/utils"
 	"fmt"
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/event"
+	"strings"
 	"time"
 )
 
@@ -34,7 +35,7 @@ func (f FabSdk)ListenBlock(){
 
 			/////// 判断是否发布token
 			if tx.Args != nil {
-				if  tx.Args[0] == "Issue" {
+				if  strings.ToLower(tx.Args[0]) == "issue" {
 					fabsdk := InitSdk()
 					defer fabsdk.Close()
 					err = fabsdk.SyncToken()

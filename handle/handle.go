@@ -192,6 +192,7 @@ func (f FabSdk)GetTransactionByTxId(txid string)(model.TransactionDetail,error){
 }
 
 func (f FabSdk)SyncToken()error{
+	fmt.Println("===========start=========:SyncToken")
 	tokens,err := f.GetTokens()
 	if err != nil{
 		return err
