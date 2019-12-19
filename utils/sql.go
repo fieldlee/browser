@@ -146,7 +146,7 @@ func (s *SqlCliet)QueryBlockByHeight(height int)(model.BlockHeader,error){
 		return model.BlockHeader{} , err
 	}
 	row := stmt.QueryRow(height)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		return model.BlockHeader{} , err
 	}
 	if row != nil {
@@ -160,7 +160,7 @@ func (s *SqlCliet)QueryBlockByHeight(height int)(model.BlockHeader,error){
 		blockheader.CreateTime = time.Format("2006-01-02 15:04:05")
 		return blockheader,nil
 	}else{
-		return model.BlockHeader{} , errors.New("the transaction not exist")
+		return model.BlockHeader{} , errors.New("the block not exist,please check height")
 	}
 }
 
@@ -171,7 +171,7 @@ func (s *SqlCliet)QueryBlockByHash(hash string)(model.BlockHeader,error){
 		return model.BlockHeader{} , err
 	}
 	row := stmt.QueryRow(hash)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows{
 		return model.BlockHeader{} , err
 	}
 	if row != nil {
@@ -185,7 +185,7 @@ func (s *SqlCliet)QueryBlockByHash(hash string)(model.BlockHeader,error){
 		blockheader.CreateTime = time.Format("2006-01-02 15:04:05")
 		return blockheader,nil
 	}else{
-		return model.BlockHeader{} , errors.New("the transaction not exist")
+		return model.BlockHeader{} , errors.New("the block not exist, please check hash value")
 	}
 }
 
@@ -200,7 +200,7 @@ func (s *SqlCliet)QueryBlocksByRange(curHeight int,limit int)([]model.BlockHeade
 		return nil , err
 	}
 	rows,err := stmt.Query(start,curHeight)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows{
 		return nil , err
 	}
 	listBLOCK := make([]model.BlockHeader,0)
@@ -226,7 +226,7 @@ func (s *SqlCliet)QueryTxsByBlockHash(hash string)([]model.TransactionDetail,err
 		return nil , err
 	}
 	rows,err := stmt.Query(hash)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows{
 		return nil , err
 	}
 	listTX := make([]model.TransactionDetail,0)
@@ -311,7 +311,7 @@ func (s *SqlCliet)QueryTxsByAccount(account string)([]model.TransactionDetail,er
 	}
 	laccount := "%"+account+"%"
 	rows,err := stmt.Query(laccount)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows{
 		return nil , err
 	}
 	listTX := make([]model.TransactionDetail,0)
@@ -347,7 +347,7 @@ func (s *SqlCliet)QueryTxsByToken(token string)([]model.TransactionDetail,error)
 	}
 	laccount := "%"+token+"%"
 	rows,err := stmt.Query(laccount)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows{
 		return nil , err
 	}
 	listTX := make([]model.TransactionDetail,0)
@@ -400,7 +400,7 @@ func (s *SqlCliet)QueryTxsNumByTypes(types []interface{})(int,error){
 	//query := fmt.Sprintf(" select count(*) as txcount  from transactions where method in (%s) and (args like '%%USAVY.T%%' or args like '%%USALXN.T%%' or args like '%%USIVZ.T%%' )",fhstr)
 	stmt,err := s.DB.Prepare(query)
 	defer stmt.Close()
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows{
 		return 0 , err
 	}
 	//strTypes := make([]string,0)
@@ -431,7 +431,7 @@ func (s *SqlCliet)QueryTxsByRange(curHeight int,limit int)([]model.TransactionDe
 	}
 
 	rows,err := stmt.Query(limit,offset)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows{
 		return nil , err
 	}
 	listTX := make([]model.TransactionDetail,0)
