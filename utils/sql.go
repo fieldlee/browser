@@ -153,9 +153,11 @@ func (s *SqlCliet)QueryBlockByHeight(height int)(model.BlockHeader,error){
 		blockheader := model.BlockHeader{}
 		var time = time.Now()
 		err = row.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number,&time)
-		if err != nil {
+		if err != nil && err != sql.ErrNoRows {
 			fmt.Printf(err.Error())
 			return model.BlockHeader{} , err
+		}else{
+			return model.BlockHeader{} , errors.New("the block not exist,please check height")
 		}
 		blockheader.CreateTime = time.Format("2006-01-02 15:04:05")
 		return blockheader,nil
@@ -178,9 +180,11 @@ func (s *SqlCliet)QueryBlockByHash(hash string)(model.BlockHeader,error){
 		blockheader := model.BlockHeader{}
 		var time = time.Now()
 		err = row.Scan(&blockheader.PreviousHash, &blockheader.DataHash, &blockheader.Number,&time)
-		if err != nil {
+		if err != nil && err != sql.ErrNoRows {
 			fmt.Printf(err.Error())
 			return model.BlockHeader{} , err
+		}else{
+			return model.BlockHeader{} , errors.New("the block not exist, please check hash value")
 		}
 		blockheader.CreateTime = time.Format("2006-01-02 15:04:05")
 		return blockheader,nil
@@ -263,8 +267,10 @@ func (s *SqlCliet)QueryBlockHashByTxId(hash string)(string,error){
 	if row != nil {
 		var blockhash = new(string)
 		err = row.Scan(&blockhash)
-		if err != nil {
+		if err != nil && err != sql.ErrNoRows{
 			return "" , err
+		}else{
+			return "" , errors.New("the hash transaction not exist")
 		}
 		return *blockhash ,nil
 	}else{
